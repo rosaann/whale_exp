@@ -41,6 +41,8 @@ from keras.utils import Sequence
 import keras
 #from tqdm import tqdm_notebook
 from tensorboardX import SummaryWriter
+import torch
+
 tagged = dict([(p,w) for _,p,w in read_csv('../train.csv').to_records()])
 submit = [p for _,p,_ in read_csv('../sample_submission.csv').to_records()]
 join   = list(tagged.keys()) + submit
@@ -50,7 +52,6 @@ anisotropy   = 2.15 # The horizontal compression ratio
 
 writer = SummaryWriter(log_dir='out/')
 
-writer.add_scalar('test', 5, 0)
 p2size = {}
 for p in tqdm(join):
     size      = pil_image.open(expand_path(p)).size
@@ -637,6 +638,19 @@ def compute_score(verbose=1):
     score    = score_reshape(score, features)
     return features, score
 import cv2
+def to_grayscale(img):
+    """
+    input is (d,w,h)
+    converts 3D image tensor to grayscale images corresponding to each channel
+    """
+    # print(image.shape)
+    channel = img.shape[0]
+    img = torch.sum(img, dim=0)
+    # print(image.shape)
+    img = torch.div(img, channel)
+    # print(image.shape)
+    # assert False
+    return img
 def make_steps(step, ampl):
     """
     Perform training epochs
@@ -665,6 +679,15 @@ def make_steps(step, ampl):
     # Compute the match score for each picture pair
     features, score = compute_score()
     
+    for i in [0]:
+        feature_map = features[i]
+      #  print('feature_map ', feature_map.shape)
+        feature_map = feature_map.squeeze(0)
+        temp = to_grayscale(feature_map).data.cpu().numpy()
+        feature_map = temp * 255
+        feature_heatmap = cv2.applyColorMap(feature_map.astype(np.uint8), cv2.COLORMAP_JET)
+        writer.add_image('{}test/{}'.format(i, steps), feature_heatmap, steps)
+    
     # Train the model for 'step' epochs
     history = model.fit_generator(
         TrainingData(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=32),
@@ -675,8 +698,11 @@ def make_steps(step, ampl):
         ]).history
     
     for i in [0, 100, 1000, 130]:
-        feature_map = (features[0] * 255)
+        feature_map = features[i]
       #  print('feature_map ', feature_map.shape)
+        feature_map = feature_map.squeeze(0)
+        temp = to_grayscale(feature_map).data.cpu().numpy()
+        feature_map = temp * 255
         feature_heatmap = cv2.applyColorMap(feature_map.astype(np.uint8), cv2.COLORMAP_JET)
         writer.add_image('{}/{}'.format(i, steps), feature_heatmap, steps)
     
