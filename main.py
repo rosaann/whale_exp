@@ -145,20 +145,20 @@ def read_cropped_image(p, augment):
     trans = np.dot(np.array([[1, 0, 0.5*(y1 + y0)], [0, 1, 0.5*(x1 + x0)], [0, 0, 1]]), trans)
 
     # Read the image, transform to black and white and comvert to numpy array
-    img   = read_raw_image(p, rotate)#.convert('L')
+    img   = read_raw_image(p, rotate).convert('L')
     img   = img_to_array(img)
     img = np.expand_dims(img, axis=0)
     img = preprocess_input(img)
     # Apply affine transformation
-  #  matrix = trans[:2,:2]
-   # offset = trans[:2,2]
- #   img    = img.reshape(img.shape[:-1])
- #   img    = affine_transform(img, matrix, offset, output_shape=img_shape[:-1], order=1, mode='constant', cval=np.average(img))
-    img    = img.reshape(img_shape)
+    matrix = trans[:2,:2]
+    offset = trans[:2,2]
+    img    = img.reshape(img.shape[:-1])
+    img    = affine_transform(img, matrix, offset, output_shape=img_shape[:-1], order=1, mode='constant', cval=np.average(img))
+  #  img    = img.reshape(img_shape)
 
     # Normalize to zero mean and unit variance
- #   img  -= np.mean(img, keepdims=True)
- #   img  /= np.std(img, keepdims=True) + K.epsilon()
+    img  -= np.mean(img, keepdims=True)
+    img  /= np.std(img, keepdims=True) + K.epsilon()
     return img
 
 def build_transform(rotation, shear, height_zoom, width_zoom, height_shift, width_shift):
