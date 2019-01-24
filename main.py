@@ -147,14 +147,14 @@ def read_cropped_image(p, augment):
     # Read the image, transform to black and white and comvert to numpy array
     img   = read_raw_image(p, rotate).convert('L')
     img   = img_to_array(img)
-    img = np.expand_dims(img, axis=0)
-    img = preprocess_input(img)
+  #  img = np.expand_dims(img, axis=0)
+  #  img = preprocess_input(img)
     # Apply affine transformation
     matrix = trans[:2,:2]
     offset = trans[:2,2]
     img    = img.reshape(img.shape[:-1])
     img    = affine_transform(img, matrix, offset, output_shape=img_shape[:-1], order=1, mode='constant', cval=np.average(img))
-  #  img    = img.reshape(img_shape)
+    img    = img.reshape(img_shape)
 
     # Normalize to zero mean and unit variance
     img  -= np.mean(img, keepdims=True)
