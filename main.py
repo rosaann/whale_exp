@@ -423,7 +423,7 @@ class FeatureGen(Sequence):
         return a
     def __len__(self):
         return (len(self.data) + self.batch_size - 1)//self.batch_size
-from keras_tqdm import TQDMNotebookCallback
+from keras_tqdm import TQDMCallback
 
 def subblock(x, filter, **kwargs):
     x = BatchNormalization()(x)
@@ -546,6 +546,9 @@ head_model.summary()
 plot_model(head_model, to_file='head-model.png')
 pil_image.open('head-model.png')
 
+plot_model(branch_model, to_file='branch_model.png')
+pil_image.open('branch_model.png')
+
 # A Keras generator to evaluate on the HEAD MODEL on features already pre-computed.
 # It computes only the upper triangular matrix of the cost matrix if y is None.
 class ScoreGen(Sequence):
@@ -647,7 +650,7 @@ def make_steps(step, ampl):
         TrainingData(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=32),
         initial_epoch=steps, epochs=steps + step, max_queue_size=12, workers=6, verbose=0,
         callbacks=[
-            TQDMNotebookCallback(leave_inner=True, metric_format='{value:0.3f}')
+            TQDMCallback(leave_inner=True, metric_format='{value:0.3f}')
         ]).history
     steps += step
     
