@@ -415,7 +415,7 @@ class FeatureGen(Sequence):
         start = self.batch_size*index
         size  = min(len(self.data) - start, self.batch_size)
         a     = np.zeros((size,) + self.img_shape, dtype=K.floatx())
-        for i in range(size): a[i,:,:,:] = read_for_validation(self.data[start + i],h2p, p2size, rotate, img_shape)
+        for i in range(size): a[i,:,:,:] = read_for_validation(self.data[start + i])
         if self.verbose > 0: 
             self.progress.update()
             if self.progress.n >= len(self): self.progress.close()
