@@ -243,11 +243,7 @@ img_shape    = (224,224, 3)
 rotate = []
 
 
-model, branch_model, head_model = build_model(64e-5,0)
-head_model.summary()
 
-plot_model(head_model, to_file='head-model.png')
-pil_image.open('head-model.png')
 
 # Find all the whales associated with an image id. It can be ambiguous as duplicate images may have different whale ids.
 h2ws = {}
@@ -299,7 +295,7 @@ for i,t in enumerate(train): t2i[t] = i
 
 #len(train),len(w2ts)
 
-from keras.utils import Sequence
+#from keras.utils import Sequence
 
 # First try to use lapjv Linear Assignment Problem solver as it is much faster.
 # At the time I am writing this, kaggle kernel with custom package fail to commit.
@@ -465,6 +461,37 @@ def build_model(lr, l2, activation='sigmoid'):
     branch_model = Model(inputs= base_model.input, outputs=x)
 
     '''
+    #  branch model old  
+    x   = Conv2D(64, (9,9), strides=2, activation='relu', **kwargs)(inp)
+
+    x   = MaxPooling2D((2, 2), strides=(2, 2))(x) # 96x96x64
+    for _ in range(2):
+        x = BatchNormalization()(x)
+        x = Conv2D(64, (3,3), activation='relu', **kwargs)(x)
+
+    x = MaxPooling2D((2, 2), strides=(2, 2))(x) # 48x48x64
+    x = BatchNormalization()(x)
+    x = Conv2D(128, (1,1), activation='relu', **kwargs)(x) # 48x48x128
+    for _ in range(4): x = subblock(x, 64, **kwargs)
+
+    x = MaxPooling2D((2, 2), strides=(2, 2))(x) # 24x24x128
+    x = BatchNormalization()(x)
+    x = Conv2D(256, (1,1), activation='relu', **kwargs)(x) # 24x24x256
+    for _ in range(4): x = subblock(x, 64, **kwargs)
+
+    x = MaxPooling2D((2, 2), strides=(2, 2))(x) # 12x12x256
+    x = BatchNormalization()(x)
+    x = Conv2D(384, (1,1), activation='relu', **kwargs)(x) # 12x12x384
+    for _ in range(4): x = subblock(x, 96, **kwargs)
+
+    x = MaxPooling2D((2, 2), strides=(2, 2))(x) # 6x6x384
+    x = BatchNormalization()(x)
+    x = Conv2D(512, (1,1), activation='relu', **kwargs)(x) # 6x6x512
+    for _ in range(4): x = subblock(x, 128, **kwargs)
+    
+    x             = GlobalMaxPooling2D()(x) # 512
+    Bidirectional(LSTM(512, return_sequences=True), input_shape=(512, 1))
+    branch_model  = Model(inp, x)
     ############
     #lstm model
     ############
@@ -509,40 +536,14 @@ def build_model(lr, l2, activation='sigmoid'):
     model.compile(optim, loss='binary_crossentropy', metrics=['binary_crossentropy', 'acc'])
     return model, branch_model, head_model
 
-  #  branch model old  
-    x   = Conv2D(64, (9,9), strides=2, activation='relu', **kwargs)(inp)
-
-    x   = MaxPooling2D((2, 2), strides=(2, 2))(x) # 96x96x64
-    for _ in range(2):
-        x = BatchNormalization()(x)
-        x = Conv2D(64, (3,3), activation='relu', **kwargs)(x)
-
-    x = MaxPooling2D((2, 2), strides=(2, 2))(x) # 48x48x64
-    x = BatchNormalization()(x)
-    x = Conv2D(128, (1,1), activation='relu', **kwargs)(x) # 48x48x128
-    for _ in range(4): x = subblock(x, 64, **kwargs)
-
-    x = MaxPooling2D((2, 2), strides=(2, 2))(x) # 24x24x128
-    x = BatchNormalization()(x)
-    x = Conv2D(256, (1,1), activation='relu', **kwargs)(x) # 24x24x256
-    for _ in range(4): x = subblock(x, 64, **kwargs)
-
-    x = MaxPooling2D((2, 2), strides=(2, 2))(x) # 12x12x256
-    x = BatchNormalization()(x)
-    x = Conv2D(384, (1,1), activation='relu', **kwargs)(x) # 12x12x384
-    for _ in range(4): x = subblock(x, 96, **kwargs)
-
-    x = MaxPooling2D((2, 2), strides=(2, 2))(x) # 6x6x384
-    x = BatchNormalization()(x)
-    x = Conv2D(512, (1,1), activation='relu', **kwargs)(x) # 6x6x512
-    for _ in range(4): x = subblock(x, 128, **kwargs)
-    
-    x             = GlobalMaxPooling2D()(x) # 512
-    Bidirectional(LSTM(512, return_sequences=True), input_shape=(512, 1))
-    branch_model  = Model(inp, x)
+  
   
 
+model, branch_model, head_model = build_model(64e-5,0)
+head_model.summary()
 
+plot_model(head_model, to_file='head-model.png')
+pil_image.open('head-model.png')
 
 # A Keras generator to evaluate on the HEAD MODEL on features already pre-computed.
 # It computes only the upper triangular matrix of the cost matrix if y is None.
@@ -656,6 +657,7 @@ def make_steps(step, ampl):
     print(history['epochs'],history['lr'],history['ms'])
     histories.append(history)
     
+
 model_name = 'mpiotte-standard-lstm'
 histories  = []
 steps      = 0
