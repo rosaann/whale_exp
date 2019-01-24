@@ -9,7 +9,8 @@ Created on Tue Jan 22 10:02:44 2019
 from pandas import read_csv
 
 from PIL import Image as pil_image
-from tqdm import tqdm_notebook
+#from  import tqdm_notebook
+import tqdm
 import pickle
 import numpy as np
 from imagehash import phash
@@ -37,7 +38,7 @@ from keras.layers import TimeDistributed
 from keras.layers import Bidirectional
 from keras import backend as K
 from keras.utils import Sequence
-from tqdm import tqdm_notebook
+#from tqdm import tqdm_notebook
 
 tagged = dict([(p,w) for _,p,w in read_csv('../train.csv').to_records()])
 submit = [p for _,p,_ in read_csv('../sample_submission.csv').to_records()]
@@ -48,7 +49,7 @@ anisotropy   = 2.15 # The horizontal compression ratio
 
 
 p2size = {}
-for p in tqdm_notebook(join):
+for p in tqdm(join):
     size      = pil_image.open(expand_path(p)).size
     p2size[p] = size
 #len(p2size), list(p2size.items())[:5]
@@ -190,7 +191,7 @@ if isfile('p2h.pickle'):
 else:
     # Compute phash for each image in the training and test set.
     p2h = {}
-    for p in tqdm_notebook(join):
+    for p in tqdm(join):
         img    = pil_image.open(expand_path(p))
         h      = phash(img)
         p2h[p] = h
