@@ -679,14 +679,14 @@ def make_steps(step, ampl):
     # Compute the match score for each picture pair
     features, score = compute_score()
     
-    for i in [0]:
-        feature_map = features[i]
+ #   for i in [0]:
+ #       feature_map = features[i]
       #  print('feature_map ', feature_map.shape)
        # feature_map = feature_map.squeeze(0)
        # temp = to_grayscale(feature_map).data.cpu().numpy()
-        feature_map = feature_map * 255
-        feature_heatmap = cv2.applyColorMap(feature_map.astype(np.uint8), cv2.COLORMAP_JET)
-        writer.add_image('{}test/{}'.format(i, steps), feature_heatmap, steps)
+ #       feature_map = feature_map * 255
+  #      feature_heatmap = cv2.applyColorMap(feature_map.astype(np.uint8), cv2.COLORMAP_JET)
+ #       writer.add_image('{}test/{}'.format(i, steps), feature_heatmap, steps)
     
     # Train the model for 'step' epochs
     history = model.fit_generator(
@@ -697,16 +697,16 @@ def make_steps(step, ampl):
             LossHistory()
         ]).history
     
-    for i in [0, 100, 1000, 130]:
-        feature_map = features[i]
+  #  for i in [0, 100, 1000, 130]:
+  #      feature_map = features[i]
       #  print('feature_map ', feature_map.shape)
      #   feature_map = feature_map.squeeze(0)
      #   temp = to_grayscale(feature_map).data.cpu().numpy()
       #  temp = to_grayscale(feature_map).data.cpu().numpy()
 
-        feature_map = feature_map * 255
-        feature_heatmap = cv2.applyColorMap(feature_map.astype(np.uint8), cv2.COLORMAP_JET)
-        writer.add_image('{}/{}'.format(i, steps), feature_heatmap, steps)
+  #      feature_map = feature_map * 255
+  #      feature_heatmap = cv2.applyColorMap(feature_map.astype(np.uint8), cv2.COLORMAP_JET)
+  #      writer.add_image('{}/{}'.format(i, steps), feature_heatmap, steps)
     
     steps += step
     
