@@ -38,8 +38,9 @@ from keras.layers import TimeDistributed
 from keras.layers import Bidirectional
 from keras import backend as K
 from keras.utils import Sequence
+import keras
 #from tqdm import tqdm_notebook
-
+from tensorboardX import SummaryWriter
 tagged = dict([(p,w) for _,p,w in read_csv('../train.csv').to_records()])
 submit = [p for _,p,_ in read_csv('../sample_submission.csv').to_records()]
 join   = list(tagged.keys()) + submit
@@ -47,7 +48,7 @@ join   = list(tagged.keys()) + submit
 crop_margin  = 0.05
 anisotropy   = 2.15 # The horizontal compression ratio
 
-
+writer = SummaryWriter(log_dir='/out')
 p2size = {}
 for p in tqdm(join):
     size      = pil_image.open(expand_path(p)).size
@@ -591,7 +592,13 @@ def set_lr(model, lr):
 
 def get_lr(model):
     return K.get_value(model.optimizer.lr)
-
+steps      = 0
+class LossHistory(keras.callbacks.Callback):
+    def on_epoch_end(self, batch, logs={}):
+        writer.add_scalar('Train/loc_loss', logs.get('loss'), steps)
+        writer.add_scalar('Train/acc', logs.get('acc'), steps)
+        writer.add_scalar('Val/loc_loss', logs.get('val_loss'), steps)
+        writer.add_scalar('Val/aac', logs.get('val_acc'), steps)
 def score_reshape(score, x, y=None):
     """
     Tranformed the packed matrix 'score' into a square matrix.
@@ -622,7 +629,7 @@ def compute_score(verbose=1):
     score    = head_model.predict_generator(ScoreGen(features, verbose=verbose), max_queue_size=12, workers=6, verbose=0)
     score    = score_reshape(score, features)
     return features, score
-
+import cv2
 def make_steps(step, ampl):
     """
     Perform training epochs
@@ -658,6 +665,13 @@ def make_steps(step, ampl):
         callbacks=[
             TQDMCallback(leave_inner=True, metric_format='{value:0.3f}')
         ]).history
+    
+    for i in [0, 100, 1000, 130]:
+        feature_map = (features[0] * 255)
+      #  print('feature_map ', feature_map.shape)
+        feature_heatmap = cv2.applyColorMap(feature_map.astype(np.uint8), cv2.COLORMAP_JET)
+        writer.add_image('{}/{}'.format(i, steps), feature_heatmap, steps)
+    
     steps += step
     
     # Collect history data
@@ -713,7 +727,23 @@ else:
     
 branch_model.save('mpiotte-standard_branch.model')
 head_model.save('mpiotte-standard_header.model')   
-    
+   
+branch_model_json = branch_model.to_json()
+with open("branch_model.json", "w") as json_file:
+    json_file.write(branch_model_json)
+branch_model.save_weights("branch_model.h5") 
+
+head_model_json = head_model.to_json()
+with open("head_model.json", "w") as json_file:
+    json_file.write(head_model_json)
+head_model.save_weights("head_model.h5") 
+
+
+#json_file = open('model.json', 'r')
+#loaded_model_json = json_file.read()
+#json_file.close()
+#loaded_model = model_from_json(loaded_model_json)
+#loaded_model.load_weights("model.h5")
 # Not computing the submission in this notebook because it is a little slow. It takes about 15 minutes on setup with a GTX 1080.
 import gzip
 
