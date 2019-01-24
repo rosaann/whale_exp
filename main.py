@@ -491,7 +491,7 @@ def build_model(lr, l2, activation='sigmoid'):
     for _ in range(4): x = subblock(x, 128, **kwargs)
     
     x             = GlobalMaxPooling2D()(x) # 512
-    Bidirectional(LSTM(512, return_sequences=True), input_shape=(512, 1))
+    x = Bidirectional(LSTM(512, return_sequences=True), input_shape=(512, 1))(x)
     branch_model  = Model(inp, x)
     ############
     #lstm model
