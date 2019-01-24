@@ -88,8 +88,8 @@ def prefer(ps):
     return best_p
 
 def read_raw_image(p, rotate):
-   # img = pil_image.open(expand_path(p))
-    img = image.load_img(expand_path(p), target_size=(224, 224))
+    img = pil_image.open(expand_path(p))
+    #img = image.load_img(expand_path(p), target_size=(224, 224))
     if p in rotate: img = img.rotate(180)
     return img
 
