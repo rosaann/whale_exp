@@ -223,9 +223,15 @@ else:
         h = str(h)
         if h in h2h: h = h2h[h]
         p2h[p] = h
+        
+    pickle.dump(p2h, open('p2h.pickle', "wb")) 
+    with open('p2h.pickle', 'wb') as handle:
+        pickle.dump(p2h, handle)
 
 #len(p2h), list(p2h.items())[:5]
-# For each image id, determine the list of pictures
+        
+
+
 h2ps = {}
 for p,h in p2h.items():
     if h not in h2ps: h2ps[h] = []
