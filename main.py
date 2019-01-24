@@ -237,8 +237,8 @@ h2p = {}
 for h,ps in h2ps.items(): h2p[h] = prefer(ps)
 #len(h2p),list(h2p.items())[:5]
 
-#img_shape    = (384,384,1)
-img_shape    = (224,224, 3)
+img_shape    = (384,384,1)
+#img_shape    = (224,224, 3)
 
  # The margin added around the bounding box to compensate for bounding box inaccuracy
 
@@ -597,8 +597,7 @@ class LossHistory(keras.callbacks.Callback):
     def on_epoch_end(self, batch, logs={}):
         writer.add_scalar('Train/loc_loss', logs.get('loss'), steps)
         writer.add_scalar('Train/acc', logs.get('acc'), steps)
-        writer.add_scalar('Val/loc_loss', logs.get('val_loss'), steps)
-        writer.add_scalar('Val/aac', logs.get('val_acc'), steps)
+        
 def score_reshape(score, x, y=None):
     """
     Tranformed the packed matrix 'score' into a square matrix.
