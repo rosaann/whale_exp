@@ -451,7 +451,7 @@ def build_model(lr, l2, activation='sigmoid'):
 
     inp = Input(shape=img_shape) # 384x384x1
     
-'''
+    '''
     base_model = ResNet50(weights='imagenet', include_top=False)
     for layer in base_model.layers:
         layer.trainable = False
@@ -464,7 +464,7 @@ def build_model(lr, l2, activation='sigmoid'):
     x = Bidirectional(LSTM(1024, return_sequences=True), input_shape=(1024, 1))
     branch_model = Model(inputs= base_model.input, outputs=x)
 
-'''
+    '''
     ############
     #lstm model
     ############
