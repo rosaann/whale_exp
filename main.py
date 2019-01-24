@@ -494,9 +494,10 @@ def build_model(lr, l2, activation='sigmoid'):
     print('d ',x.shape)
   #  x = Bidirectional(LSTM(x.shape[0], return_sequences=True), input_shape=x.shape)(x)
     x = Reshape((-1, 512, 1))(x) 
+    print('d2 ',x.shape)
     x = LSTM(512, return_sequences=False)(x)
 
-    print('d2 ',x.shape)
+    print('d3 ',x.shape)
     branch_model  = Model(inp, x)
     ############
     #lstm model
