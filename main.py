@@ -207,7 +207,7 @@ else:
 
     # If the images are close enough, associate the two phash values (this is the slow part: n^2 algorithm)
     h2h = {}
-    for i,h1 in enumerate(tqdm_notebook(hs)):
+    for i,h1 in enumerate(tqdm(hs)):
         for h2 in hs[:i]:
             if h1-h2 <= 6 and match(h1, h2):
                 s1 = str(h1)
@@ -411,7 +411,7 @@ class FeatureGen(Sequence):
         self.verbose    = verbose
         self.img_shape = img_shape
     
-        if self.verbose > 0: self.progress = tqdm_notebook(total=len(self), desc='Features')
+        if self.verbose > 0: self.progress = tqdm(total=len(self), desc='Features')
     def __getitem__(self, index):
         start = self.batch_size*index
         size  = min(len(self.data) - start, self.batch_size)
@@ -564,7 +564,7 @@ class ScoreGen(Sequence):
             self.ix          = self.ix.reshape((self.ix.size,))
             self.iy          = self.iy.reshape((self.iy.size,))
         self.subbatch = (len(self.x) + self.batch_size - 1)//self.batch_size
-        if self.verbose > 0: self.progress = tqdm_notebook(total=len(self), desc='Scores')
+        if self.verbose > 0: self.progress = tqdm(total=len(self), desc='Scores')
     def __getitem__(self, index):
         start = index*self.batch_size
         end   = min(start + self.batch_size, len(self.ix))
@@ -719,7 +719,7 @@ def prepare_submission(threshold, filename):
     pos   = [0,0,0,0,0,0]
     with gzip.open(filename, 'wt', newline='\n') as f:
         f.write('Image,Id\n')
-        for i,p in enumerate(tqdm_notebook(submit)):
+        for i,p in enumerate(tqdm(submit)):
             t = []
             s = set()
             a = score[i,:]
