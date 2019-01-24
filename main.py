@@ -48,7 +48,9 @@ join   = list(tagged.keys()) + submit
 crop_margin  = 0.05
 anisotropy   = 2.15 # The horizontal compression ratio
 
-writer = SummaryWriter(log_dir='/out')
+writer = SummaryWriter(log_dir='out/')
+
+writer.add_scalar('test', 5, 0)
 p2size = {}
 for p in tqdm(join):
     size      = pil_image.open(expand_path(p)).size
