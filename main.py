@@ -683,7 +683,7 @@ def make_steps(step, ampl):
         feature_map = features[i]
       #  print('feature_map ', feature_map.shape)
        # feature_map = feature_map.squeeze(0)
-        temp = to_grayscale(feature_map).data.cpu().numpy()
+        temp = to_grayscale(feature_map).data.cpu()
         feature_map = temp * 255
         feature_heatmap = cv2.applyColorMap(feature_map.astype(np.uint8), cv2.COLORMAP_JET)
         writer.add_image('{}test/{}'.format(i, steps), feature_heatmap, steps)
@@ -701,7 +701,9 @@ def make_steps(step, ampl):
         feature_map = features[i]
       #  print('feature_map ', feature_map.shape)
      #   feature_map = feature_map.squeeze(0)
-        temp = to_grayscale(feature_map).data.cpu().numpy()
+     #   temp = to_grayscale(feature_map).data.cpu().numpy()
+        temp = to_grayscale(feature_map).data.cpu()
+
         feature_map = temp * 255
         feature_heatmap = cv2.applyColorMap(feature_map.astype(np.uint8), cv2.COLORMAP_JET)
         writer.add_image('{}/{}'.format(i, steps), feature_heatmap, steps)
