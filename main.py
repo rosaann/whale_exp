@@ -10,7 +10,7 @@ from pandas import read_csv
 
 from PIL import Image as pil_image
 #from  import tqdm_notebook
-import tqdm
+from tqdm import tqdm
 import pickle
 import numpy as np
 from imagehash import phash
