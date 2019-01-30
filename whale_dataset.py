@@ -54,6 +54,7 @@ def build_transform(rotation, shear, height_zoom, width_zoom, height_shift, widt
 
 class WhaleDataSet(data.Dataset):
     def __init__(self):
+        self.img_shape = img_shape
         self.tagged = dict([(p,w) for _,p,w in read_csv('../train.csv').to_records()])
         self.submit = [p for _,p,_ in read_csv('../sample_submission.csv').to_records()]
         self.join   = list(self.tagged.keys()) + self.submit
@@ -217,6 +218,19 @@ class WhaleDataSet(data.Dataset):
             
         self.h2p = {}
         for h,ps in self.h2ps.items(): self.h2p[h] = self.prefer(ps)
+    def load_w2ts_before_train(self):
+        # Map whale id to the list of associated training picture hash value
+        self.w2ts = {}
+        for w,hs in self.w2hs.items():
+          for h in hs:
+            if h in self.train_set:
+                if w not in self.w2ts: self.w2ts[w] = []
+                if h not in self.w2ts[w]: self.w2ts[w].append(h)
+        for w,ts in self.w2ts.items(): self.w2ts[w] = np.array(ts)
+        
+        # Map training picture hash value to index in 'train' array    
+        t2i  = {}
+        for i,t in enumerate(self.train): t2i[t] = i   
         
     def load_h2w(self):
         self.h2ws = {}
@@ -251,12 +265,12 @@ class WhaleDataSet(data.Dataset):
             if len(hs) > 1:
                 self.train += hs
         random.shuffle(self.train)
-        train_set = set(self.train)
+        self.train_set = set(self.train)
 
         self.w2ts = {} # Associate the image ids from train to each whale id.
         for w,hs in self.w2hs.items():
             for h in hs:
-                if h in train_set:
+                if h in self.train_set:
                     if w not in self.w2ts: self.w2ts[w] = []
                     if h not in self.w2ts[w]: self.w2ts[w].append(h)
         for w,ts in self.w2ts.items(): self.w2ts[w] = np.array(ts)
