@@ -257,7 +257,19 @@ class WhaleDataSet(data.Dataset):
         for w,hs in self.w2hs.items():
             if len(hs) > 1:
                 self.w2hs[w] = sorted(hs)
-                
+    def load_known(self):
+        # Find elements from training sets not 'new_whale'
+        self.h2ws = {}
+        for p,w in self.tagged.items():
+            if w != 'new_whale': # Use only identified whales
+                h = self.p2h[p]
+                if h not in self.h2ws: self.h2ws[h] = []
+                if w not in self.h2ws[h]: self.h2ws[h].append(w)
+        self.known = sorted(list(self.h2ws.keys()))
+
+        # Dictionary of picture indices
+        self.h2i   = {}
+        for i,h in enumerate(self.known): self.h2i[h] = i           
     def load_t2i(self):
         # Find the list of training images, keep only whales with at least two images.
         self.train = [] # A list of training image ids

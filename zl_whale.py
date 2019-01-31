@@ -18,6 +18,9 @@ from torch.optim import lr_scheduler
 import torch.utils.data as data
 import numpy as np
 import random
+import gzip
+from tqdm import tqdm
+
 
 class Whale(object):
     def __init__(self):
@@ -62,7 +65,7 @@ class Whale(object):
         """
         Compute the score matrix by scoring every pictures from the training set against every other picture O(n^2).
         """
-        feature_data = FeatureGen(self.dataset.train, self.dataset,verbose=verbose)
+        feature_data = FeatureGen(self.train_data.train, self.train_data,verbose=verbose)
         feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
         
@@ -103,7 +106,6 @@ class Whale(object):
         self.train_data.load_w2ts_before_train()
 
      
-
         # Compute the match score for each picture pair
         features, score = self.compute_score()
         self.train_data.setupScore(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=32)
@@ -126,50 +128,135 @@ class Whale(object):
         steps += step
     
     
-
+    def set_lr(self, lr):
+        for param_group in self.optimizer.param_groups:
+            param_group['lr'] = lr
     def train(self):
-        if isfile('mpiotte-standard.model'):
+        file_name = 'mpiotte_model_torch.model'
+        
+        if False:
             tmp = keras.models.load_model('mpiotte-standard.model')
             model.set_weights(tmp.get_weights())
         else:
             # epoch -> 10
-            make_steps(10, 1000)
+            self.make_steps(10, 1000)
             ampl = 100.0
             for _ in range(10):
                 print('noise ampl.  = ', ampl)
-                make_steps(5, ampl)
+                self.make_steps(5, ampl)
                 ampl = max(1.0, 100**-0.1*ampl)
                 # epoch -> 150
-            for _ in range(18): make_steps(5, 1.0)
+            for _ in range(18): self.make_steps(5, 1.0)
             # epoch -> 200
-            set_lr(model, 16e-5)
-            for _ in range(10): make_steps(5, 0.5)
+            self.set_lr( 16e-5)
+            for _ in range(10): self.make_steps(5, 0.5)
             # epoch -> 240
-            set_lr(model, 4e-5)
-            for _ in range(8): make_steps(5, 0.25)
+            self.set_lr( 4e-5)
+            for _ in range(8): self.make_steps(5, 0.25)
             # epoch -> 250
-            set_lr(model, 1e-5)
-            for _ in range(2): make_steps(5, 0.25)
+            self.set_lr( 1e-5)
+            for _ in range(2): self.make_steps(5, 0.25)
             # epoch -> 300
-            weights = model.get_weights()
-            model, branch_model, head_model = build_model(64e-5,0.0002)
-            model.set_weights(weights)
-            for _ in range(10): make_steps(5, 1.0)
+           # weights = model.get_weights()
+           # model, branch_model, head_model = build_model(64e-5,0.0002)
+           # model.set_weights(weights)
+            for _ in range(10): self.make_steps(5, 1.0)
             # epoch -> 350
-            set_lr(model, 16e-5)
-            for _ in range(10): make_steps(5, 0.5)    
+            self.set_lr( 16e-5)
+            for _ in range(10): self.make_steps(5, 0.5)    
             # epoch -> 390
-            set_lr(model, 4e-5)
-            for _ in range(8): make_steps(5, 0.25)
+            self.set_lr( 4e-5)
+            for _ in range(8): self.make_steps(5, 0.25)
             # epoch -> 400
-            set_lr(model, 1e-5)
-            for _ in range(2): make_steps(5, 0.25)
-            model.save('mpiotte-standard.model')
+            self.set_lr( 1e-5)
+            for _ in range(2): self.make_steps(5, 0.25)
+
+            torch.save(self.model.state_dict(), file_name)
 
 
+    def prepare_submission(self, threshold, filename):
+        """
+        Generate a Kaggle submission file.
+        @param threshold the score given to 'new_whale'
+        @param filename the submission file name
+        """
+        vtop  = 0
+        vhigh = 0
+        pos   = [0,0,0,0,0,0]
+        with gzip.open(filename, 'wt', newline='\n') as f:
+            f.write('Image,Id\n')
+            for i,p in enumerate(tqdm(self.train_data.submit)):
+                t = []
+                s = set()
+                a = score[i,:]
+                for j in list(reversed(np.argsort(a))):
+                    h = self.train_data.known[j]
+                    if a[j] < threshold and 'new_whale' not in s:
+                        pos[len(t)] += 1
+                        s.add('new_whale')
+                        t.append('new_whale')
+                        if len(t) == 5: break;
+                    for w in self.train_data.h2ws[h]:
+                        assert w != 'new_whale'
+                        if w not in s:
+                            if a[j] > 1.0:
+                                vtop += 1
+                            elif a[j] >= threshold:
+                                vhigh += 1
+                            s.add(w)
+                            t.append(w)
+                            if len(t) == 5: break;
+                    if len(t) == 5: break;
+                if 'new_whale' not in s: pos[5] += 1
+                assert len(t) == 5 and len(s) == 5
+                f.write(p + ',' + ' '.join(t[:5]) + '\n')
+        return vtop,vhigh,pos
 
+    def test(self):
+        self.train_data.load_known()
+        
+        feature_data = FeatureGen(self.train_data.known, self.train_data)
+        feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
+                        shuffle=False, pin_memory=True)
+        fknown = []
+        for images in feature_dataset:
+            if self.use_gpu:
+                images = Variable(images.cuda())
+            fknown += self.model.branch_model(images)   
+        ##
+        
+        feature_data_s = FeatureGen(self.train_data.submit, self.train_data)
+        feature_data_s_set = data.DataLoader(feature_data_s, 32, num_workers= 8,
+                        shuffle=False, pin_memory=True)      
+        fsubmit = []
+        for images in feature_data_s_set:
+            if self.use_gpu:
+                images = Variable(images.cuda())
+            fsubmit += self.model.branch_model(images)
 
+        ##
+        
+        score_data = ScoreGen(fknown, fsubmit)
+        score_dataset = data.DataLoader(score_data, 32, num_workers= 8,
+                        shuffle=False, pin_memory=True)
+        
+        score = []
+        for t_features in score_dataset:
+            score += self.model.head_model(t_features)
 
+        score = self.score_reshape(score, features)
 
-
+    # Evaluate the model.
+    
+    # Generate the subsmission file.
+        self.prepare_submission(0.99, 'zl_mpiotte-standard_lstm.csv.gz')
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
