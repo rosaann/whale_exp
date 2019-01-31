@@ -374,7 +374,7 @@ class WhaleDataSet(data.Dataset):
         # Read the image, transform to black and white and comvert to numpy array
         img   = read_raw_image(p, rotate).convert('L')
      #   img   = img_to_array(img)
-        img = np.expand_dims(img, axis=0)
+       # img = np.expand_dims(img, axis=0)
         #  img = preprocess_input(img)
         # Apply affine transformation
         matrix = trans[:2,:2]
