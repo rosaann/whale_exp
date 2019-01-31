@@ -50,19 +50,19 @@ class Branch_Model(nn.Module):
         self.layers += [nn.BatchNorm2d(128)]
         self.layers += [nn.Conv2d(128, 256, kernel_size=1), nn.ReLU(inplace=True)]
         for _ in range(4):
-            self.layers += Sub_Block(256, 64)    
+            self.layers += [Sub_Block(256, 64)]    
             
         self.layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
         self.layers += [nn.BatchNorm2d(256)]
         self.layers += [nn.Conv2d(256, 384, kernel_size=1), nn.ReLU(inplace=True)]
         for _ in range(4):
-            self.layers += Sub_Block(384, 96)  
+            self.layers += [Sub_Block(384, 96)]  
             
         self.layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
         self.layers += [nn.BatchNorm2d(384)]
         self.layers += [nn.Conv2d(384, 512, kernel_size=1), nn.ReLU(inplace=True)]
         for _ in range(4):
-            self.layers += Sub_Block(512, 128)  
+            self.layers += [Sub_Block(512, 128)  ]
             
     def forward(self, x):
         out = self.layers(x)        
