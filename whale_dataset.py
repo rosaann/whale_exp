@@ -103,8 +103,8 @@ class WhaleDataSet(data.Dataset):
         end   = min(start + self.batch_size, len(self.match) + len(self.unmatch))
         size  = end - start
         assert size > 0
-        a     = np.zeros((size,) + img_shape, dtype=torch.float)
-        b     = np.zeros((size,) + img_shape, dtype=torch.float)
+        a     = np.zeros((size,) + img_shape)
+        b     = np.zeros((size,) + img_shape)
         c     = np.zeros((size,1), dtype=torch.float)
         j     = start//2
         for i in range(0, size, 2):
@@ -373,8 +373,8 @@ class WhaleDataSet(data.Dataset):
 
         # Read the image, transform to black and white and comvert to numpy array
         img   = read_raw_image(p, rotate).convert('L')
-        img   = img_to_array(img)
-        #  img = np.expand_dims(img, axis=0)
+     #   img   = img_to_array(img)
+        img = np.expand_dims(img, axis=0)
         #  img = preprocess_input(img)
         # Apply affine transformation
         matrix = trans[:2,:2]
@@ -419,7 +419,7 @@ class FeatureGen(data.Dataset):
     def __getitem__(self, index):
         start = self.batch_size*index
         size  = min(len(self.data) - start, self.batch_size)
-        a     = np.zeros((size,) + img_shape, dtype=torch.float)
+        a     = np.zeros((size,) + img_shape)
         for i in range(size): a[i,:,:,:] = self.train_dataset.read_for_validation(self.data[start + i])
         if self.verbose > 0: 
             self.progress.update()
