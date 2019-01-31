@@ -381,7 +381,7 @@ class WhaleDataSet(data.Dataset):
         matrix = trans[:2,:2]
         offset = trans[:2,2]
         print('pre shape ', img.shape, ' out ', img.shape[:-1])
-        img    = img.reshape(img.shape[:-1])
+    #    img    = img.reshape(img.shape[:-1])
         img    = affine_transform(img, matrix, offset, output_shape=img_shape[:-1], order=1, mode='constant', cval=np.average(img))
         img    = img.reshape(img_shape)
 
