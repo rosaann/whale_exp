@@ -426,7 +426,7 @@ class FeatureGen(data.Dataset):
     def __getitem__(self, index):
         start = self.batch_size*index
         size  = min(len(self.data) - start, self.batch_size)
-        a     = np.zeros((size,) + img_shape)
+        a     = np.zeros((size,) + (img_shape[2], img_shape[0], img_shape[1]))
         for i in range(size): a[i,:,:,:] = self.train_dataset.read_for_validation(self.data[start + i])
         if self.verbose > 0: 
             self.progress.update()
