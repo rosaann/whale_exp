@@ -66,7 +66,8 @@ class Branch_Model(nn.Module):
         for _ in range(4):
             self.layers += [Sub_Block(512, 128)  ]
         '''     
-        self.layers = nn.ModuleList(self.layers)
+       # self.layers = nn.ModuleList(self.layers)
+        self.layers = nn.Conv2d(32, 64, kernel_size=9, stride=2)
     def forward(self, x):
         print('x ', x.shape)
         out = self.layers(x)  
