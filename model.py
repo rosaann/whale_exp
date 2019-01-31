@@ -23,7 +23,7 @@ class Sub_Block(nn.Module):
         layers += [nn.BatchNorm2d(layers_out)]
         layers += [nn.Conv2d(layers_out, layers_in, kernel_size=1), nn.ReLU(inplace=True)]
         
-        self.y = layers
+        self.y = nn.ModuleList(layers)
         self.act = nn.ReLU(inplace=True)
     def forward(self, x):
         out_x = self.x(x)
