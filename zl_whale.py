@@ -25,9 +25,9 @@ from torchsummary import summary
 class Whale(object):
     def __init__(self):
         self.model = Whole_Model()
-        summary(self.model)
-        self.model.branch_model.summary()
-        self.model.header_model.summary()
+        summary(self.model, input_size=(3, 255, 255))
+       # self.model.branch_model.summary()
+       # self.model.header_model.summary()
 
         self.use_gpu = torch.cuda.is_available()
         if self.use_gpu:
