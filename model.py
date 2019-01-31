@@ -44,7 +44,7 @@ class Branch_Model(nn.Module):
         self.layers += [nn.BatchNorm2d(64)]
         self.layers += [nn.Conv2d(64, 128, kernel_size=1), nn.ReLU(inplace=True)]
         for _ in range(4):
-            self.layers += Sub_Block(128, 64)
+            self.layers += [Sub_Block(128, 64)]
             
         self.layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
         self.layers += [nn.BatchNorm2d(128)]
