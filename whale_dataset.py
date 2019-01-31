@@ -25,7 +25,7 @@ import torch
 crop_margin  = 0.05
 anisotropy = 2.15 # The horizontal compression ratio
 rotate = []
-img_shape = (1,384,384)
+img_shape = (384,384,1)
 eps=1e-10
 
 def expand_path(p):
@@ -375,7 +375,7 @@ class WhaleDataSet(data.Dataset):
         img   = read_raw_image(p, rotate).convert('L')
      #   img   = img_to_array(img)
         img = np.array(img,dtype=np.float64)
-        print('img 1 shape ', img.shape)
+     #   print('img 1 shape ', img.shape)
 
        # img = np.expand_dims(img, axis=0)
         #  img = preprocess_input(img)
@@ -390,7 +390,7 @@ class WhaleDataSet(data.Dataset):
         # Normalize to zero mean and unit variance
         img  -= np.mean(img, keepdims=True)
         img  /= np.std(img, keepdims=True) + eps
-        
+        img = img.reshape(img_shape[2],img_shape[0],img_shape[1])
         print('img 2 shape ', img.shape)
 
         return img
