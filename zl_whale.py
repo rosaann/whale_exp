@@ -20,12 +20,12 @@ import numpy as np
 import random
 import gzip
 from tqdm import tqdm
-
+from torchsummary import summary
 
 class Whale(object):
     def __init__(self):
         self.model = Whole_Model()
-        self.model.summary()
+        summary(self.model)
         self.model.branch_model.summary()
         self.model.header_model.summary()
 
