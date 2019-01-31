@@ -12,7 +12,7 @@ from torch.autograd import Variable
 #from models.other_layers.l2norm import L2Norm
 import numpy as np
 
-class Sub_Block(nn.Model):
+class Sub_Block(nn.Module):
     def __init__(self,layers_in, layers_out):
         super(Sub_Block, self).__init__()
         self.x = nn.BatchNorm2d(layers_in)
@@ -32,7 +32,7 @@ class Sub_Block(nn.Model):
         out = self.act(out)
         return out
         
-class Branch_Model(nn.Model):
+class Branch_Model(nn.Module):
     def __init__(self):
         super(Branch_Model, self).__init__()
         self.layers = []
@@ -71,7 +71,7 @@ class Branch_Model(nn.Model):
 class Flatten(nn.Module):
     def forward(self, input):
         return input.view(input.size(0), -1)
-class Header_Model(nn.Model):
+class Header_Model(nn.Module):
     def __init__(self):
         super(Header_Model, self).__init__()  
         self.layer_1 = [nn.Conv2d(4, 32, kernel_size=(4, 1)), nn.ReLU(inplace=True)]
@@ -96,7 +96,7 @@ class Header_Model(nn.Model):
         out = self.dense(out)
         return out
     
-class Whole_Model(nn.Model):
+class Whole_Model(nn.Module):
     def __init__(self):
         super(Whole_Model, self).__init__()  
         self.branch_model = Branch_Model(name = 'branch')
