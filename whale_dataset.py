@@ -373,6 +373,7 @@ class WhaleDataSet(data.Dataset):
 
         # Read the image, transform to black and white and comvert to numpy array
         img   = read_raw_image(p, rotate).convert('L')
+        print('img 1 shape ', img.shape)
      #   img   = img_to_array(img)
         img = np.array(img,dtype=np.float64)
        # img = np.expand_dims(img, axis=0)
@@ -388,6 +389,9 @@ class WhaleDataSet(data.Dataset):
         # Normalize to zero mean and unit variance
         img  -= np.mean(img, keepdims=True)
         img  /= np.std(img, keepdims=True) + eps
+        
+        print('img 2 shape ', img.shape)
+
         return img
 
     def read_for_training(self, p):
