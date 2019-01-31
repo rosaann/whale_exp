@@ -66,6 +66,7 @@ class Branch_Model(nn.Module):
         
         self.layers = nn.ModuleList(self.layers)
     def forward(self, x):
+        print('x ', x.shape)
         out = self.layers(x)        
         out = F.max_pool2d(out, kernel_size=out.size()[2:])
         return out
