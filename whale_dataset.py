@@ -25,7 +25,7 @@ import torch
 crop_margin  = 0.05
 anisotropy = 2.15 # The horizontal compression ratio
 rotate = []
-img_shape = (384,384,1)
+img_shape = (1,384,384)
 eps=1e-10
 
 def expand_path(p):
