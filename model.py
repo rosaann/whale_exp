@@ -45,7 +45,7 @@ class Branch_Model(nn.Module):
         self.layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
         self.layers += [nn.BatchNorm2d(64)]
         self.layers += [nn.Conv2d(64, 128, kernel_size=1), nn.ReLU(inplace=True)]
-        for _ in range(4):
+        '''for _ in range(4):
             self.layers += [Sub_Block(128, 64)]
             
         self.layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
@@ -65,11 +65,12 @@ class Branch_Model(nn.Module):
         self.layers += [nn.Conv2d(384, 512, kernel_size=1), nn.ReLU(inplace=True)]
         for _ in range(4):
             self.layers += [Sub_Block(512, 128)  ]
-        
+        '''     
         self.layers = nn.ModuleList(self.layers)
     def forward(self, x):
         print('x ', x.shape)
-        out = self.layers(x)        
+        out = self.layers(x)  
+        print('x2 ', out.shape)
         out = F.max_pool2d(out, kernel_size=out.size()[2:])
         return out
 class Flatten(nn.Module):
