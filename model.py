@@ -99,8 +99,8 @@ class Header_Model(nn.Module):
 class Whole_Model(nn.Module):
     def __init__(self):
         super(Whole_Model, self).__init__()  
-        self.branch_model = Branch_Model(name = 'branch')
-        self.header_model = Header_Model(name = 'header')
+        self.branch_model = Branch_Model()
+        self.header_model = Header_Model()
     
     def forward(self, x):
         xa = self.branch_model(x[0])
