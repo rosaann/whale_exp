@@ -9,7 +9,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from models.other_layers.l2norm import L2Norm
+#from models.other_layers.l2norm import L2Norm
 import numpy as np
 
 class Sub_Block(nn.Model):
