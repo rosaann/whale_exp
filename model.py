@@ -63,7 +63,8 @@ class Branch_Model(nn.Module):
         self.layers += [nn.Conv2d(384, 512, kernel_size=1), nn.ReLU(inplace=True)]
         for _ in range(4):
             self.layers += [Sub_Block(512, 128)  ]
-            
+        
+        self.layers = nn.ModuleList(self.layers)
     def forward(self, x):
         out = self.layers(x)        
         out = F.max_pool2d(out, kernel_size=out.size()[2:])
@@ -74,11 +75,11 @@ class Flatten(nn.Module):
 class Header_Model(nn.Module):
     def __init__(self):
         super(Header_Model, self).__init__()  
-        self.layer_1 = [nn.Conv2d(4, 32, kernel_size=(4, 1)), nn.ReLU(inplace=True)]
-        self.layer_2 = [nn.Conv2d(32, 32, kernel_size=(1, 32)), nn.Linear(32, 1)]
+        self.layer_1 = nn.ModuleList( [nn.Conv2d(4, 32, kernel_size=(4, 1)), nn.ReLU(inplace=True)])
+        self.layer_2 = nn.ModuleList( [nn.Conv2d(32, 32, kernel_size=(1, 32)), nn.Linear(32, 1)])
         self.flatten = Flatten()
         
-        self.dense = [nn.Linear(1, 1, bias = True), nn.Sigmoid()]
+        self.dense = nn.ModuleList([nn.Linear(1, 1, bias = True), nn.Sigmoid()])
 
     def forward(self, x):
         x1 = x[0] * x[1]
