@@ -26,10 +26,12 @@ class Sub_Block(nn.Module):
         self.y = nn.ModuleList(layers)
         self.act = nn.ReLU(inplace=True)
     def forward(self, x):
+        print('sub in ', x.shape)
         out_x = self.x(x)
         out_y = self.y(out_x)
         out = torch.add(out_x, out_y)
         out = self.act(out)
+        print('sub out ', out.shape)
         return out
         
 class Branch_Model(nn.Module):
