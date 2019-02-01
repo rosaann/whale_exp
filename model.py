@@ -17,11 +17,14 @@ class Sub_Block(nn.Module):
         super(Sub_Block, self).__init__()
         self.x = nn.BatchNorm2d(layers_in)
         layers = nn.ModuleList()
-        layers.append(nn.Conv2d(layers_in, layers_out, kernel_size=1), nn.ReLU(inplace=True))
+        layers.append(nn.Conv2d(layers_in, layers_out, kernel_size=1))
+        layers.append(nn.ReLU(inplace=True))
         layers.append(nn.BatchNorm2d(layers_out))
-        layers.append(nn.Conv2d(layers_out, layers_out, kernel_size=3), nn.ReLU(inplace=True))
+        layers.append(nn.Conv2d(layers_out, layers_out, kernel_size=3))
+        layers.append(nn.ReLU(inplace=True))
         layers.append(nn.BatchNorm2d(layers_out))
-        layers.append(nn.Conv2d(layers_out, layers_in, kernel_size=1), nn.ReLU(inplace=True))
+        layers.append(nn.Conv2d(layers_out, layers_in, kernel_size=1))
+        layers.append(nn.ReLU(inplace=True))
         
         self.y = layers
         self.act = nn.ReLU(inplace=True)
