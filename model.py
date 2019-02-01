@@ -24,7 +24,7 @@ class Sub_Block(nn.Module):
         layers.append(nn.ReLU(inplace=True))
         layers.append(nn.BatchNorm2d(layers_out))
         layers.append(nn.Conv2d(layers_out, layers_in, kernel_size=1))
-       # layers.append(nn.ReLU(inplace=True))
+        layers.append(nn.ReLU(inplace=True))
         
         self.y = layers
         self.act = nn.ReLU(inplace=True)
@@ -34,6 +34,9 @@ class Sub_Block(nn.Module):
         out_y = out_x
         for i in range(len(self.y)):
             out_y = (self.y[i])(out_y)
+            print('out_y ', out_y.shape)
+        print('out_x ', out_x.shape)
+
         out = torch.add(out_x, out_y)
         out = self.act(out)
         print('sub out ', out.shape)
