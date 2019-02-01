@@ -391,7 +391,7 @@ class WhaleDataSet(data.Dataset):
         img  -= np.mean(img, keepdims=True)
         img  /= np.std(img, keepdims=True) + eps
         img = img.reshape(img_shape[2],img_shape[0],img_shape[1])
-        print('img 2 shape ', img.shape)
+    #    print('img 2 shape ', img.shape)
 
         return img
 
