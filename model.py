@@ -80,7 +80,6 @@ class Branch_Model(nn.Module):
              
     def forward(self, x):
         print('x ', x.shape)
-        out = self.layers(x)  
         out = x
         for i in range(len(self.layers)):
             out = (self.layers[i])(out)
