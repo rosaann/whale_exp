@@ -24,7 +24,7 @@ class Sub_Block(nn.Module):
         layers.append(nn.ReLU(inplace=True))
         layers.append(nn.BatchNorm2d(layers_out))
         layers.append(nn.Conv2d(layers_out, layers_in, kernel_size=1))
-        layers.append(nn.ReLU(inplace=True))
+       # layers.append(nn.ReLU(inplace=True))
         
         self.y = layers
         self.act = nn.ReLU(inplace=True)
