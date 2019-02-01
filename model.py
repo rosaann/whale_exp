@@ -40,31 +40,38 @@ class Branch_Model(nn.Module):
     def __init__(self):
         super(Branch_Model, self).__init__()
         self.layers = nn.ModuleList()
-        self.layers.append(nn.Conv2d(1, 64, kernel_size=9, stride=2), nn.ReLU(inplace=True))
+        self.layers.append(nn.Conv2d(1, 64, kernel_size=9, stride=2))
+        self.layers.append(nn.ReLU(inplace=True))
         self.layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         for _ in range(2):
-            self.layers.append(nn.BatchNorm2d(64), nn.Conv2d(64, 64, kernel_size=3), nn.ReLU(inplace=True))
+            self.layers.append(nn.BatchNorm2d(64))
+            self.layers.append(nn.Conv2d(64, 64, kernel_size=3))
+        self.layers.append(nn.ReLU(inplace=True))
         self.layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         self.layers.append(nn.BatchNorm2d(64))
-        self.layers.append(nn.Conv2d(64, 128, kernel_size=1), nn.ReLU(inplace=True))
+        self.layers.append(nn.Conv2d(64, 128, kernel_size=1))
+        self.layers.append(nn.ReLU(inplace=True))
         for _ in range(4):
             self.layers.append(Sub_Block(128, 64))
             
         self.layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         self.layers.append(nn.BatchNorm2d(128))
-        self.layers.append(nn.Conv2d(128, 256, kernel_size=1), nn.ReLU(inplace=True))
+        self.layers.append(nn.Conv2d(128, 256, kernel_size=1))
+        self.layers.append(nn.ReLU(inplace=True))
         for _ in range(4):
             self.layers.append(Sub_Block(256, 64))    
             
         self.layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         self.layers.append(nn.BatchNorm2d(256))
-        self.layers.append(nn.Conv2d(256, 384, kernel_size=1), nn.ReLU(inplace=True))
+        self.layers.append(nn.Conv2d(256, 384, kernel_size=1))
+        self.layers.append(nn.ReLU(inplace=True))
         for _ in range(4):
             self.layers.append(Sub_Block(384, 96))  
             
         self.layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         self.layers.append(nn.BatchNorm2d(384))
-        self.layers.append(nn.Conv2d(384, 512, kernel_size=1), nn.ReLU(inplace=True))
+        self.layers.append(nn.Conv2d(384, 512, kernel_size=1))
+        self.layers.append(nn.ReLU(inplace=True))
         for _ in range(4):
             self.layers.append(Sub_Block(512, 128)  )
              
