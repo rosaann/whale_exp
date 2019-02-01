@@ -424,7 +424,7 @@ class FeatureGen(data.Dataset):
         
         if self.verbose > 0: self.progress = tqdm(total=len(self), desc='Features')
     def __getitem__(self, index):
-        return self.train_dataset.read_for_validation(index)
+        return self.train_dataset.read_for_validation(self.data[index])
         start = self.batch_size*index
         size  = min(len(self.data) - start, self.batch_size)
         a     = np.zeros((size,) + (img_shape[2], img_shape[0], img_shape[1]))
