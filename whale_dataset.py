@@ -424,6 +424,7 @@ class FeatureGen(data.Dataset):
         
         if self.verbose > 0: self.progress = tqdm(total=len(self), desc='Features')
     def __getitem__(self, index):
+        return self.train_dataset.read_for_validation(index)
         start = self.batch_size*index
         size  = min(len(self.data) - start, self.batch_size)
         a     = np.zeros((size,) + (img_shape[2], img_shape[0], img_shape[1]))
@@ -433,6 +434,7 @@ class FeatureGen(data.Dataset):
             if self.progress.n >= len(self): self.progress.close()
         return a
     def __len__(self):
+        return len(self.data)
         return (len(self.data) + self.batch_size - 1)//self.batch_size   
 
 # A Keras generator to evaluate on the HEAD MODEL on features already pre-computed.
