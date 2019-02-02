@@ -148,7 +148,9 @@ class Whole_Model(nn.Module):
         x = []
         for i in range(len(xa)):
             print('xi ', xa[i].shape)
-            x.append([xa[i,:,:,:], xb[i,:,:,:]])
+            x.append([xa[i], xb[i]])
+            print('xx ', x)
+            print('xx s ', np.array(x).shape)
         x = np.array(x)
         print('x ', x.shape)
 
