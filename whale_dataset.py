@@ -425,6 +425,7 @@ class FeatureGen(data.Dataset):
         if self.verbose > 0: self.progress = tqdm(total=len(self), desc='Features')
     def __getitem__(self, index):
         return self.train_dataset.read_for_validation(self.data[index])
+        '''
         start = self.batch_size*index
         size  = min(len(self.data) - start, self.batch_size)
         a     = np.zeros((size,) + (img_shape[2], img_shape[0], img_shape[1]))
@@ -433,10 +434,12 @@ class FeatureGen(data.Dataset):
             self.progress.update()
             if self.progress.n >= len(self): self.progress.close()
         return a
+        '''
     def __len__(self):
         return len(self.data)
+        '''
         return (len(self.data) + self.batch_size - 1)//self.batch_size   
-
+        '''
 # A Keras generator to evaluate on the HEAD MODEL on features already pre-computed.
 # It computes only the upper triangular matrix of the cost matrix if y is None.
 class ScoreGen(data.Dataset):
@@ -457,6 +460,7 @@ class ScoreGen(data.Dataset):
         self.subbatch = (len(self.x) + self.batch_size - 1)//self.batch_size
         if self.verbose > 0: self.progress = tqdm(total=len(self), desc='Scores')
     def __getitem__(self, index):
+        return np.array([self.y[self.iy[index]], self.x[self.ix[index]]])
         start = index*self.batch_size
         end   = min(start + self.batch_size, len(self.ix))
         a     = self.y[self.iy[start:end],:]
@@ -465,8 +469,9 @@ class ScoreGen(data.Dataset):
             self.progress.update()
             if self.progress.n >= len(self): self.progress.close()
         #每回输出一对特征，这一对的序号为上三角矩阵的横纵坐标
-        return [a,b]
+        return np.array([a,b])
     def __len__(self):
+        return len(self.iy)
         return (len(self.ix) + self.batch_size - 1)//self.batch_size
 
 
