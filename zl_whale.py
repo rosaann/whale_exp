@@ -73,7 +73,7 @@ class Whale(object):
         features = []
         i = 0
         self.model.branch_model.eval()
-        for images in feature_dataset:
+        for images in tqdm(feature_dataset):
             if self.use_gpu:
                 images = Variable(images.cuda().float())
             f =self.model.branch_model(images)
@@ -87,7 +87,7 @@ class Whale(object):
         
         score = []
         self.model.header_model.eval()
-        for t_features in score_dataset:
+        for t_features in tqdm(score_dataset):
             if self.use_gpu:
                 t_features = Variable(t_features.cuda().float())
             score.extend(self.model.header_model(t_features).cpu().data.numpy())
@@ -130,6 +130,7 @@ class Whale(object):
                 loss_c = self.criterion(out, ts)
                 loss_c.backward()
                 self.optimizer.step()
+                self.writer.add_scalar('train/conf_loss', loss_c, steps)
             self.train_data.on_epoch_end()
             train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
