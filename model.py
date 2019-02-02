@@ -142,8 +142,8 @@ class Whole_Model(nn.Module):
     
     def forward(self, x):
         print('in x ',x.shape)
-        xa = self.branch_model(x[0])
-        xb = self.branch_model(x[1])
+        xa = self.branch_model(x[:,0])
+        xb = self.branch_model(x[:,1])
         print('xa ', xa.shape)
         x = []
         for xxa, xxb in zip(xa, xb):
@@ -152,7 +152,7 @@ class Whole_Model(nn.Module):
         print('x ', x.shape)
 
         x = Variable(x.cuda().float())
-        print('x ', x.shape)
+      #  print('x ', x.shape)
         x = self.header_model(x)
         return x
     
