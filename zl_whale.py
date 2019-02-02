@@ -122,8 +122,8 @@ class Whale(object):
                 loss_c.backward()
                 self.optimizer.step()
             self.train_data.on_epoch_end()
-            train_dataset = data.DataLoader(self.train_data, 30, num_workers= 8,
-                        shuffle=False, pin_memory=True)
+         #   train_dataset = data.DataLoader(self.train_data, 30, num_workers= 8,
+         #               shuffle=False, pin_memory=True)
    
         steps += step
     
