@@ -67,17 +67,21 @@ class Whale(object):
         """
         self.model.eval()
         feature_data = FeatureGen(self.train_data.train, self.train_data,verbose=verbose)
-        feature_dataset = data.DataLoader(feature_data, 4, num_workers= 8,
+        feature_dataset = data.DataLoader(feature_data, 16, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
         features = []
+        i = 0
         for images in feature_dataset:
             if self.use_gpu:
                 images = Variable(images.cuda().float())
-            features.extend( self.model.branch_model(images).cpu() )     
+            f =self.model.branch_model(images)
+            print('f ', f.shape, ' ', i)
+            i += 1
+            features.extend( f.cpu() )     
                 
         score_data = ScoreGen(features, verbose=verbose)
-        score_dataset = data.DataLoader(score_data, 16, num_workers= 8,
+        score_dataset = data.DataLoader(score_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
         score = []
