@@ -66,7 +66,7 @@ class Whale(object):
         Compute the score matrix by scoring every pictures from the training set against every other picture O(n^2).
         """
         feature_data = FeatureGen(self.train_data.train, self.train_data,verbose=verbose)
-        feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
+        feature_dataset = data.DataLoader(feature_data, 30, num_workers= 8,
                         shuffle=False, pin_memory=True)
         
         features = []
@@ -76,7 +76,7 @@ class Whale(object):
             features.extend( self.model.branch_model(images)   )     
                 
         score_data = ScoreGen(features, verbose=verbose)
-        score_dataset = data.DataLoader(score_data, 32, num_workers= 8,
+        score_dataset = data.DataLoader(score_data, 30, num_workers= 8,
                         shuffle=False, pin_memory=True)
         
         score = []
@@ -108,8 +108,8 @@ class Whale(object):
      
         # Compute the match score for each picture pair
         features, score = self.compute_score()
-        self.train_data.setupScore(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=32)
-        train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
+        self.train_data.setupScore(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=30)
+        train_dataset = data.DataLoader(self.train_data, 30, num_workers= 8,
                         shuffle=False, pin_memory=True)
         for epoch in step:
             for image_pairs, ts in train_dataset:
@@ -122,7 +122,7 @@ class Whale(object):
                 loss_c.backward()
                 self.optimizer.step()
             self.train_data.on_epoch_end()
-            train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
+            train_dataset = data.DataLoader(self.train_data, 30, num_workers= 8,
                         shuffle=False, pin_memory=True)
    
         steps += step
