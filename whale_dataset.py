@@ -104,7 +104,7 @@ class WhaleDataSet(data.Dataset):
             #if index < 10:
             #    print('index a  ', int(index / 2), ' ', index )
             i_1 = self.unmatch[int(index / 2)][0]
-            print('i_1 ', i_1)
+          #  print('i_1 ', i_1)
             i_2 = self.unmatch[int(index / 2)][1]
             return np.array([self.read_for_training(i_1), self.read_for_training(i_2)]), 0
         else:
@@ -419,7 +419,7 @@ class WhaleDataSet(data.Dataset):
         Read and preprocess an image with data augmentation (random transform).
         """
         print('p ', p)
-        return self.read_cropped_image(self, p, True)
+        return self.read_cropped_image( p, True)
 
     def read_for_validation(self,p):
         """
