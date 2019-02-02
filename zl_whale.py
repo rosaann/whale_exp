@@ -70,16 +70,16 @@ class Whale(object):
         feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
-        features = []
+        features = np.array()
         i = 0
         self.model.branch_model.eval()
         for images in feature_dataset:
             if self.use_gpu:
                 images = Variable(images.cuda().float())
             f =self.model.branch_model(images)
-            print('f ', f.shape, ' ', i)
+          #  print('f ', f.shape, ' ', i)
             i += 1
-            features.extend( f.cpu().data )     
+            features.append( f.cpu().data )     
                 
         score_data = ScoreGen(features, verbose=verbose)
         score_dataset = data.DataLoader(score_data, 32, num_workers= 8,
@@ -87,7 +87,7 @@ class Whale(object):
         
         score = []
         for t_features in score_dataset:
-            score.extend(self.model.head_model(t_features))
+            score.extend(self.model.head_model(t_features).cpu().data)
 
         score = self.score_reshape(score, features)
         
