@@ -121,7 +121,7 @@ class Header_Model(nn.Module):
         print('out shape ', out.shape)
         out = self.layer_1(out)
         print('out1 shape ', out.shape)
-        out = out.view(x.shape[0],-1, 32, 1)
+        out = out.view(x.shape[0],32, -1, 1)
         print('out2 shape ', out.shape)
         out = self.layer_2(out)
         print('out3 shape ', out.shape)
