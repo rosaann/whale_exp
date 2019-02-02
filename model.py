@@ -104,11 +104,14 @@ class Header_Model(nn.Module):
 
     def forward(self, x):
         print('x ', x.shape)
-        x1 = x[0] * x[1]
+        x_0 = x[:][0]
+        x_1 = x[:][1]
+        print('x_0 ', x_0.shape)
+        x1 = x_0 * x_1
         print('x1 ', x1.shape)
-        x2 = x[0] + x[1]
+        x2 = x_0 + x_1
         print('x2 ', x2.shape)
-        x3 = torch.abs(x[0] - x[1])
+        x3 = torch.abs(x_0 - x_1)
         print('x3 ', x3.shape)
         x4 = torch.mul(x3, x3)
         print('x4 ', x4.shape)
