@@ -101,9 +101,13 @@ class WhaleDataSet(data.Dataset):
         
     def __getitem__(self, index):
         if index %2 == 0:
-            return np.array([self.unmatch[index / 2][0], self.unmatch[index / 2][1]]), 0
+            if index < 10:
+                print('index a  ', int(index / 2), ' ', index )
+            return np.array([self.unmatch[int(index / 2)][0], self.unmatch[int(index / 2)][1]]), 0
         else:
-            return np.array([self.match[index / 2][0], self.match[index / 2][1]]), 1
+            if index < 10:
+                print('index b ', int(index / 2), ' ', index)
+            return np.array([self.match[int(index / 2)][0], self.match[int(index / 2)][1]]), 1
         
         '''
         start = self.batch_size*index
