@@ -106,32 +106,32 @@ class Header_Model(nn.Module):
 
     def forward(self, x):
        # x = x.squeeze()
-        print('x ', x.shape)
+    #    print('x ', x.shape)
         x_0 = x[:,0]
         x_1 = x[:,1]
-        print('x_0 ', x_0.shape)
+     #   print('x_0 ', x_0.shape)
         x1 = x_0 * x_1
-        print('x1 ', x1.shape)
+     #   print('x1 ', x1.shape)
         x2 = x_0 + x_1
-        print('x2 ', x2.shape)
+     #   print('x2 ', x2.shape)
         x3 = torch.abs(x_0 - x_1)
-        print('x3 ', x3.shape)
+     #   print('x3 ', x3.shape)
         x4 = torch.mul(x3, x3)
-        print('x4 ', x4.shape)
+      #  print('x4 ', x4.shape)
         out = torch.cat((x1, x2, x3, x4), -1)
-        print('out1 ', out.shape)
+     #   print('out1 ', out.shape)
         out = out.view(x.shape[0], 4, -1, 1)
-        print('out shape ', out.shape)
+      #  print('out shape ', out.shape)
         out = self.layer_1(out)
-        print('out1 shape ', out.shape)
+      #  print('out1 shape ', out.shape)
         out = out.view(x.shape[0],32, -1, 1)
-        print('out2 shape ', out.shape)
+      #  print('out2 shape ', out.shape)
         out = self.layer_2(out)
-        print('out3 shape ', out.shape)
+     #   print('out3 shape ', out.shape)
         out = self.flatten(out)
-        print('out4 shape ', out.shape)
+      #  print('out4 shape ', out.shape)
         out = self.dense(out)
-        print('out5 shape ', out.shape)
+     #   print('out5 shape ', out.shape)
         return out
     
 class Whole_Model(nn.Module):

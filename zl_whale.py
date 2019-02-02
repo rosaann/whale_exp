@@ -118,7 +118,7 @@ class Whale(object):
         # Compute the match score for each picture pair
         features, score = self.compute_score()
         self.train_data.setupScore(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=30)
-        train_dataset = data.DataLoader(self.train_data, 30, num_workers= 8,
+        train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
         for epoch in step:
             for image_pairs, ts in train_dataset:
@@ -131,7 +131,7 @@ class Whale(object):
                 loss_c.backward()
                 self.optimizer.step()
             self.train_data.on_epoch_end()
-            train_dataset = data.DataLoader(self.train_data, 30, num_workers= 8,
+            train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
    
         steps += step
@@ -142,7 +142,9 @@ class Whale(object):
             param_group['lr'] = lr
     def train(self):
         file_name = 'mpiotte_model_torch.model'
-        
+        self.make_steps(1, 1000)
+        torch.save(self.model.state_dict(), file_name)
+        return
         if False:
             tmp = keras.models.load_model('mpiotte-standard.model')
             model.set_weights(tmp.get_weights())
