@@ -418,7 +418,7 @@ class WhaleDataSet(data.Dataset):
         """
         Read and preprocess an image with data augmentation (random transform).
         """
-        print('p ', p)
+       # print('p ', p)
         return self.read_cropped_image( p, True)
 
     def read_for_validation(self,p):

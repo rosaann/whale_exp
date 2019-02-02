@@ -143,7 +143,13 @@ class Whole_Model(nn.Module):
     def forward(self, x):
         xa = self.branch_model(x[0])
         xb = self.branch_model(x[1])
-        x = self.header_model([xa, xb])
+        print('xa ', xa.shape)
+        x = []
+        for xxa, xxb in zip(xa, xb):
+            x.append([xxa, xxb])
+        x = np.array(x)
+        print('x ', x.shape)
+        x = self.header_model(x)
         return x
     
     
