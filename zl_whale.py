@@ -66,7 +66,7 @@ class Whale(object):
         Compute the score matrix by scoring every pictures from the training set against every other picture O(n^2).
         """
         
-        feature_data = FeatureGen(self.train_data.train, self.train_data,verbose=verbose)
+        feature_data = FeatureGen(self.train_data.train[:2048], self.train_data,verbose=verbose)
         feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
@@ -82,7 +82,7 @@ class Whale(object):
             features.extend( f.cpu().data.numpy() )     
         features = np.array(features)     
         
-        score_data = ScoreGen(features[:2048], verbose=verbose)
+        score_data = ScoreGen(features, verbose=verbose)
         score_dataset = data.DataLoader(score_data, 2048, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
