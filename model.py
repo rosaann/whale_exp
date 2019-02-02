@@ -108,6 +108,7 @@ class Header_Model(nn.Module):
         x3 = torch.abs(x[0] - x[1])
         x4 = torch.mul(x3, x3)
         out = torch.cat((x1, x2, x3, x4), 0)
+        print('out1 ', out.shape)
         out = out.view(x.shape[0], 4, x.shape[1], 1)
         print('out shape ', out.shape)
         out = self.layer_1(out)
