@@ -151,6 +151,8 @@ class Whole_Model(nn.Module):
     #        x.append([xa[i], xb[i]])
     #        print('xx ', x)
     #        print('xx s ', np.array(x).shape)
+        xa = xa.unsqueeze(1)
+        xb = xb.unsqueeze(1)
         x = torch.cat((xa,xb), 1)
         print('x ', x.shape)
 
