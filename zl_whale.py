@@ -51,11 +51,11 @@ class Whale(object):
         if y is None:
             # When y is None, score is a packed upper triangular matrix.
             # Unpack, and transpose to form the symmetrical lower triangular matrix.
-            m = np.zeros((x.shape[0],x.shape[0]), dtype=torch.float)
+            m = np.zeros((x.shape[0],x.shape[0]))
             m[np.triu_indices(x.shape[0],1)] = score.squeeze()
             m += m.transpose()
         else:
-            m        = np.zeros((y.shape[0],x.shape[0]), dtype=torch.float)
+            m        = np.zeros((y.shape[0],x.shape[0]))
             iy,ix    = np.indices((y.shape[0],x.shape[0]))
             ix       = ix.reshape((ix.size,))
             iy       = iy.reshape((iy.size,))
