@@ -141,10 +141,10 @@ class Whole_Model(nn.Module):
         self.header_model = Header_Model()
     
     def forward(self, x):
-        print('in x ',x.shape)
+    #    print('in x ',x.shape)
         xa = self.branch_model(x[:,0])
         xb = self.branch_model(x[:,1])
-        print('xa ', xa.shape)
+    #    print('xa ', xa.shape)
     #    x = []
     #    for i in range(len(xa)):
     #        print('xi ', xa[i].shape)
@@ -154,7 +154,7 @@ class Whole_Model(nn.Module):
         xa = xa.unsqueeze(1)
         xb = xb.unsqueeze(1)
         x = torch.cat((xa,xb), 1)
-        print('x ', x.shape)
+     #   print('x ', x.shape)
 
         #x = Variable(x.cuda().float())
       #  print('x ', x.shape)
