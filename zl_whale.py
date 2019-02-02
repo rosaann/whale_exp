@@ -80,8 +80,9 @@ class Whale(object):
           #  print('f ', f.shape, ' ', i)
             i += 1
             features.extend( f.cpu().data.numpy() )     
-                
-        score_data = ScoreGen(np.array(features), verbose=verbose)
+        features = np.array(features)     
+        
+        score_data = ScoreGen(features[:2048], verbose=verbose)
         score_dataset = data.DataLoader(score_data, 2048, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
@@ -91,7 +92,8 @@ class Whale(object):
             if self.use_gpu:
                 t_features = Variable(t_features.cuda().float())
             score.extend(self.model.header_model(t_features).cpu().data.numpy())
-
+        
+        score = np.array(score)
         score = self.score_reshape(score, features)
         
         #features = self.model.branch_model.predict_generator(FeatureGen(self.dataset.train, self.dataset,verbose=verbose), max_queue_size=12, workers=6, verbose=0)
