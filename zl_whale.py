@@ -122,8 +122,8 @@ class Whale(object):
         self.train_data.setupScore(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=32)
         train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
-        for epoch in step:
-            for image_pairs, ts in train_dataset:
+        for epoch in tqdm(range(step)):
+            for image_pairs, ts in tqdm(train_dataset):
                 if self.use_gpu:
                     image_pairs = Variable(image_pairs.cuda())
                     ts = np.array(ts)
