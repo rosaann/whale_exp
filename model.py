@@ -117,7 +117,7 @@ class Header_Model(nn.Module):
         print('x4 ', x4.shape)
         out = torch.cat((x1, x2, x3, x4), -1)
         print('out1 ', out.shape)
-        out = out.view(x.shape[0], 4, x.shape[1], 1)
+        out = out.view(x.shape[0], 4, -1, 1)
         print('out shape ', out.shape)
         out = self.layer_1(out)
         out = out.view(-1, 32, 1)
