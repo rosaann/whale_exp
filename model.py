@@ -104,8 +104,8 @@ class Header_Model(nn.Module):
 
     def forward(self, x):
         print('x ', x.shape)
-        x_0 = x[:][0]
-        x_1 = x[:][1]
+        x_0 = x[:,0]
+        x_1 = x[:,1]
         print('x_0 ', x_0.shape)
         x1 = x_0 * x_1
         print('x1 ', x1.shape)
