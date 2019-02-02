@@ -66,7 +66,7 @@ class Whale(object):
         Compute the score matrix by scoring every pictures from the training set against every other picture O(n^2).
         """
         feature_data = FeatureGen(self.train_data.train, self.train_data,verbose=verbose)
-        feature_dataset = data.DataLoader(feature_data, 20, num_workers= 8,
+        feature_dataset = data.DataLoader(feature_data, 16, num_workers= 8,
                         shuffle=False, pin_memory=True)
         
         features = []
@@ -76,7 +76,7 @@ class Whale(object):
             features.extend( self.model.branch_model(images)   )     
                 
         score_data = ScoreGen(features, verbose=verbose)
-        score_dataset = data.DataLoader(score_data, 20, num_workers= 8,
+        score_dataset = data.DataLoader(score_data, 16, num_workers= 8,
                         shuffle=False, pin_memory=True)
         
         score = []
