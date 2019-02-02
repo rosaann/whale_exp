@@ -65,13 +65,14 @@ class Whale(object):
         """
         Compute the score matrix by scoring every pictures from the training set against every other picture O(n^2).
         """
-        self.model.eval()
+        
         feature_data = FeatureGen(self.train_data.train, self.train_data,verbose=verbose)
         feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
         features = []
         i = 0
+        self.model.branch_model.eval()
         for images in feature_dataset:
             if self.use_gpu:
                 images = Variable(images.cuda().float())
