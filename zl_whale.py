@@ -82,10 +82,11 @@ class Whale(object):
             features.extend( f.cpu().data.numpy() )     
                 
         score_data = ScoreGen(np.array(features), verbose=verbose)
-        score_dataset = data.DataLoader(score_data, 2048, num_workers= 8,
+        score_dataset = data.DataLoader(score_data, 128, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
         score = []
+        self.model.header_model.eval()
         for t_features in score_dataset:
             if self.use_gpu:
                 t_features = Variable(t_features.cuda().float())
