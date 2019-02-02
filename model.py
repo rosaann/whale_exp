@@ -97,7 +97,9 @@ class Header_Model(nn.Module):
     def __init__(self):
         super(Header_Model, self).__init__()  
         self.layer_1 = nn.Sequential(nn.Conv2d(4, 32, kernel_size=(4, 1)), nn.ReLU(inplace=True))
-        self.layer_2 = nn.Sequential(nn.Conv2d(32, 32, kernel_size=(1, 32)), nn.Linear(32, 1))
+        #self.layer_2 = nn.Sequential(nn.Conv2d(32, 32, kernel_size=(1, 32)), nn.Linear(32, 1))
+        self.layer_2 = nn.Sequential(nn.Conv2d(32, 1, kernel_size=(1, 32)))
+
         self.flatten = Flatten()
         
         self.dense = nn.Sequential(nn.Linear(1, 1, bias = True), nn.Sigmoid())
