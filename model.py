@@ -13,17 +13,17 @@ from torch.autograd import Variable
 import numpy as np
 
 class Sub_Block(nn.Module):
-    def __init__(self,layers_in, layers_out):
+    def __init__(self,layers_in, layers_out, stride=1):
         super(Sub_Block, self).__init__()
         self.x = nn.BatchNorm2d(layers_in)
         layers = nn.ModuleList()
-        layers.append(nn.Conv2d(layers_in, layers_out, kernel_size=1))
+        layers.append(nn.Conv2d(layers_in, layers_out, kernel_size=1, stride = stride, bias=False))
         layers.append(nn.ReLU(inplace=True))
         layers.append(nn.BatchNorm2d(layers_out))
-        layers.append(nn.Conv2d(layers_out, layers_out, kernel_size=3))
+        layers.append(nn.Conv2d(layers_out, layers_out, kernel_size=3, stride = stride, bias=False))
         layers.append(nn.ReLU(inplace=True))
         layers.append(nn.BatchNorm2d(layers_out))
-        layers.append(nn.Conv2d(layers_out, layers_in, kernel_size=1))
+        layers.append(nn.Conv2d(layers_out, layers_in, kernel_size=1, stride = stride, bias=False))
         layers.append(nn.ReLU(inplace=True))
         
         self.y = layers
@@ -37,10 +37,11 @@ class Sub_Block(nn.Module):
             print('out_y ', out_y.shape)
         print('out_x ', out_x.shape)
 
-        out = torch.add(out_x, out_y)
-        out = self.act(out)
-        print('sub out ', out.shape)
-        return out
+       # out = torch.add(out_x, out_y)
+        out_y += out_x
+        out_y = self.act(out_y)
+        print('sub out ', out_y.shape)
+        return out_y
         
 class Branch_Model(nn.Module):
     def __init__(self):
