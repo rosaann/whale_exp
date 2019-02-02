@@ -73,7 +73,7 @@ class Whale(object):
         for images in feature_dataset:
             if self.use_gpu:
                 images = Variable(images.cuda().float())
-            features.extend( self.model.branch_model(images)   )     
+            features.extend( self.model.branch_model(images).cpu() )     
                 
         score_data = ScoreGen(features, verbose=verbose)
         score_dataset = data.DataLoader(score_data, 16, num_workers= 8,
