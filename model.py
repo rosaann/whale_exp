@@ -103,10 +103,15 @@ class Header_Model(nn.Module):
         self.dense = nn.Sequential(nn.Linear(1, 1, bias = True), nn.Sigmoid())
 
     def forward(self, x):
+        print('x ', x.shape)
         x1 = x[0] * x[1]
+        print('x1 ', x1.shape)
         x2 = x[0] + x[1]
+        print('x2 ', x2.shape)
         x3 = torch.abs(x[0] - x[1])
+        print('x3 ', x3.shape)
         x4 = torch.mul(x3, x3)
+        print('x4 ', x4.shape)
         out = torch.cat((x1, x2, x3, x4), 0)
         print('out1 ', out.shape)
         out = out.view(x.shape[0], 4, x.shape[1], 1)
