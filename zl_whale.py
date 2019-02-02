@@ -67,7 +67,7 @@ class Whale(object):
         """
         self.model.eval()
         feature_data = FeatureGen(self.train_data.train, self.train_data,verbose=verbose)
-        feature_dataset = data.DataLoader(feature_data, 16, num_workers= 8,
+        feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
         features = []
