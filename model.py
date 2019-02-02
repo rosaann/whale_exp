@@ -29,18 +29,18 @@ class Sub_Block(nn.Module):
         self.y = layers
         self.act = nn.ReLU(inplace=True)
     def forward(self, x):
-        print('sub in ', x.shape)
+       # print('sub in ', x.shape)
         out_x = self.x(x)
         out_y = out_x
         for i in range(len(self.y)):
             out_y = (self.y[i])(out_y)
-            print('out_y ', out_y.shape)
-        print('out_x ', out_x.shape)
+        #    print('out_y ', out_y.shape)
+    #    print('out_x ', out_x.shape)
 
        # out = torch.add(out_x, out_y)
         out_y += out_x
         out_y = self.act(out_y)
-        print('sub out ', out_y.shape)
+     #   print('sub out ', out_y.shape)
         return out_y
         
 class Branch_Model(nn.Module):
@@ -83,11 +83,11 @@ class Branch_Model(nn.Module):
             self.layers.append(Sub_Block(512, 128)  )
              
     def forward(self, x):
-        print('x ', x.shape)
+       # print('x ', x.shape)
         out = x
         for i in range(len(self.layers)):
             out = (self.layers[i])(out)
-        print('x2 ', out.shape)
+       # print('x2 ', out.shape)
         out = F.max_pool2d(out, kernel_size=out.size()[2:])
         return out
 class Flatten(nn.Module):
