@@ -79,7 +79,7 @@ class Whale(object):
             f =self.model.branch_model(images)
             print('f ', f.shape, ' ', i)
             i += 1
-          #  features.extend( f.cpu() )     
+            features.extend( f.cpu().data )     
                 
         score_data = ScoreGen(features, verbose=verbose)
         score_dataset = data.DataLoader(score_data, 32, num_workers= 8,
