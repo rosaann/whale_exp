@@ -127,7 +127,9 @@ class Whale(object):
             for image_pairs, ts in tqdm(train_dataset):
                 if self.use_gpu:
                     image_pairs = Variable(image_pairs.cuda().float())
-                    ts = np.array(ts)
+                
+                ts = np.array(ts)
+                ts = ts.unsqueeze(1)
                 self.model.train()
                 out = self.model(image_pairs)
                 self.optimizer.zero_grad()
