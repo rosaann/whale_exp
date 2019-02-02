@@ -70,7 +70,7 @@ class Whale(object):
         feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
-        features = np.array()
+        features = np.array([])
         i = 0
         self.model.branch_model.eval()
         for images in feature_dataset:
