@@ -79,7 +79,7 @@ class Whale(object):
             f =self.model.branch_model(images)
           #  print('f ', f.shape, ' ', i)
             i += 1
-            features.extend( f.cpu().data )     
+            features.extend( f.cpu().data.numpy() )     
                 
         score_data = ScoreGen(np.array(features), verbose=verbose)
         score_dataset = data.DataLoader(score_data, 32, num_workers= 8,
@@ -87,7 +87,7 @@ class Whale(object):
         
         score = []
         for t_features in score_dataset:
-            score.extend(self.model.head_model(t_features).cpu().data)
+            score.extend(self.model.head_model(t_features).cpu().data.numpy())
 
         score = self.score_reshape(score, features)
         
