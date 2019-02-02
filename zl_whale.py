@@ -70,7 +70,7 @@ class Whale(object):
         feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
-        features = np.array([])
+        features = []
         i = 0
         self.model.branch_model.eval()
         for images in feature_dataset:
@@ -79,9 +79,9 @@ class Whale(object):
             f =self.model.branch_model(images)
           #  print('f ', f.shape, ' ', i)
             i += 1
-            features.append( f.cpu().data )     
+            features.extend( f.cpu().data )     
                 
-        score_data = ScoreGen(features, verbose=verbose)
+        score_data = ScoreGen(np.array(features), verbose=verbose)
         score_dataset = data.DataLoader(score_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
