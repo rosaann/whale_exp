@@ -120,11 +120,15 @@ class Header_Model(nn.Module):
         out = out.view(x.shape[0], 4, -1, 1)
         print('out shape ', out.shape)
         out = self.layer_1(out)
-        out = out.view(-1, 32, 1)
+        print('out1 shape ', out.shape)
+        out = out.view(x.shape[0],-1, 32, 1)
+        print('out2 shape ', out.shape)
         out = self.layer_2(out)
+        print('out3 shape ', out.shape)
         out = self.flatten(out)
-
+        print('out4 shape ', out.shape)
         out = self.dense(out)
+        print('out5 shape ', out.shape)
         return out
     
 class Whole_Model(nn.Module):
