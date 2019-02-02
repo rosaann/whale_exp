@@ -67,7 +67,7 @@ class Whale(object):
         """
         feature_data = FeatureGen(self.train_data.train, self.train_data,verbose=verbose)
         feature_dataset = data.DataLoader(feature_data, 16, num_workers= 8,
-                        shuffle=False, pin_memory=True)
+                        shuffle=False, pin_memory=False)
         
         features = []
         for images in feature_dataset:
@@ -77,7 +77,7 @@ class Whale(object):
                 
         score_data = ScoreGen(features, verbose=verbose)
         score_dataset = data.DataLoader(score_data, 16, num_workers= 8,
-                        shuffle=False, pin_memory=True)
+                        shuffle=False, pin_memory=False)
         
         score = []
         for t_features in score_dataset:
