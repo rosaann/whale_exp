@@ -125,7 +125,7 @@ class Whale(object):
         for epoch in tqdm(range(step)):
             for image_pairs, ts in tqdm(train_dataset):
                 if self.use_gpu:
-                    image_pairs = Variable(image_pairs.cuda())
+                    image_pairs = Variable(image_pairs.cuda().float())
                     ts = np.array(ts)
                 self.model.train()
                 out = self.model(image_pairs)
