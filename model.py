@@ -106,7 +106,7 @@ class Header_Model(nn.Module):
 
     def forward(self, x):
        # x = x.squeeze()
-        print('x in head', x.shape)
+       # print('x in head', x.shape)
         x_0 = x[:,0]
         x_1 = x[:,1]
      #   print('x_0 ', x_0.shape)
@@ -146,12 +146,12 @@ class Whole_Model(nn.Module):
         xb = self.branch_model(x[:,1])
         print('xa ', xa.shape)
         x = []
-        for xxa, xxb in zip(xa, xb):
-            x.append([xxa, xxb])
+        for i in range(len(xa)):
+            x.append([xa[i], xb[i]])
         x = np.array(x)
         print('x ', x.shape)
 
-        x = Variable(x.cuda().float())
+        #x = Variable(x.cuda().float())
       #  print('x ', x.shape)
         x = self.header_model(x)
         return x
