@@ -87,6 +87,8 @@ class Whale(object):
         
         score = []
         for t_features in score_dataset:
+            if self.use_gpu:
+                t_features = Variable(t_features.cuda().float())
             score.extend(self.model.header_model(t_features).cpu().data.numpy())
 
         score = self.score_reshape(score, features)
