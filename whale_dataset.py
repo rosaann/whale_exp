@@ -22,6 +22,13 @@ import pickle
 from imagehash import phash
 import torch
 
+try:
+    from lap import lapjv
+    segment = False
+except ImportError:
+    print('Module lap not found, emulating with much slower scipy.optimize.linear_sum_assignment')
+    segment = True
+from scipy.optimize import linear_sum_assignment
 crop_margin  = 0.05
 anisotropy = 2.15 # The horizontal compression ratio
 rotate = []
@@ -74,13 +81,7 @@ class WhaleDataSet(data.Dataset):
 # scipy can be used as a fallback, but it is too slow to run this kernel under the time limit
 # As a workaround, use scipy with data partitioning.
 # Because algorithm is O(n^3), small partitions are much faster, but not what produced the submitted solution
-        try:
-            from lap import lapjv
-            self.segment = False
-        except ImportError:
-            print('Module lap not found, emulating with much slower scipy.optimize.linear_sum_assignment')
-            self.segment = True
-            from scipy.optimize import linear_sum_assignment
+        
     def setupScore(self, score, steps=1000, batch_size=32):
         """
         @param score the cost matrix for the picture matching
@@ -128,7 +129,7 @@ class WhaleDataSet(data.Dataset):
         self.steps     -= 1
         self.match      = []
         self.unmatch    = []
-        if self.segment:
+        if segment:
             # Using slow scipy. Make small batches.
             # Because algorithm is O(n^3), small batches are much faster.
             # However, this does not find the real optimum, just an approximation.
