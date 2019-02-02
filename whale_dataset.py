@@ -99,6 +99,12 @@ class WhaleDataSet(data.Dataset):
         self.on_epoch_end()
         
     def __getitem__(self, index):
+        if index %2 == 0:
+            return np.array([self.unmatch[index / 2][0], self.unmatch[index / 2][1]]), 0
+        else:
+            return np.array([self.match[index / 2][0], self.match[index / 2][1]]), 1
+        
+        '''
         start = self.batch_size*index
         end   = min(start + self.batch_size, len(self.match) + len(self.unmatch))
         size  = end - start
@@ -116,7 +122,7 @@ class WhaleDataSet(data.Dataset):
             c[i+1,0    ] = 0 # Different whales
             j           += 1
         return [a,b],c
-    
+        '''
     def on_epoch_end(self):
         if self.steps <= 0: return # Skip this on the last epoch.
         self.steps     -= 1
@@ -167,7 +173,10 @@ class WhaleDataSet(data.Dataset):
         
         
     def __len__(self):
+        return len(self.match) + len(self.unmatch)
+        '''
         return (len(self.match) + len(self.unmatch) + self.batch_size - 1)//self.batch_size
+        '''
 
     def load_p2h(self):
         if isfile('p2h.pickle'):

@@ -66,7 +66,7 @@ class Whale(object):
         Compute the score matrix by scoring every pictures from the training set against every other picture O(n^2).
         """
         
-        feature_data = FeatureGen(self.train_data.train[:2048], self.train_data,verbose=verbose)
+        feature_data = FeatureGen(self.train_data.train, self.train_data,verbose=verbose)
         feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
@@ -119,13 +119,14 @@ class Whale(object):
      
         # Compute the match score for each picture pair
         features, score = self.compute_score()
-        self.train_data.setupScore(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=30)
+        self.train_data.setupScore(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=32)
         train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
         for epoch in step:
             for image_pairs, ts in train_dataset:
                 if self.use_gpu:
                     image_pairs = Variable(image_pairs.cuda())
+                    ts = np.array(ts)
                 self.model.train()
                 out = self.model(image_pairs)
                 self.optimizer.zero_grad()
@@ -133,6 +134,7 @@ class Whale(object):
                 loss_c.backward()
                 self.optimizer.step()
                 self.writer.add_scalar('train/conf_loss', loss_c, steps)
+                print('loss ', loss_c)
             self.train_data.on_epoch_end()
             train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
@@ -188,7 +190,7 @@ class Whale(object):
             torch.save(self.model.state_dict(), file_name)
 
 
-    def prepare_submission(self, threshold, filename):
+    def prepare_submission(self,score, threshold, filename):
         """
         Generate a Kaggle submission file.
         @param threshold the score given to 'new_whale'
@@ -233,21 +235,23 @@ class Whale(object):
         feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
         fknown = []
-        for images in feature_dataset:
+        for images in tqdm(feature_dataset):
             if self.use_gpu:
                 images = Variable(images.cuda())
-            fknown += self.model.branch_model(images)   
+            fknown.extend(self.model.branch_model(images).cpu().data.numpy()  )  
+        fknown = np.array(fknown)
         ##
         
         feature_data_s = FeatureGen(self.train_data.submit, self.train_data)
         feature_data_s_set = data.DataLoader(feature_data_s, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)      
         fsubmit = []
-        for images in feature_data_s_set:
+        for images in tqdm(feature_data_s_set):
             if self.use_gpu:
                 images = Variable(images.cuda())
-            fsubmit += self.model.branch_model(images)
-
+            fsubmit.extend(self.model.branch_model(images).cpu().data.numpy() )
+        
+        fsubmit = np.array(fsubmit)
         ##
         
         score_data = ScoreGen(fknown, fsubmit)
@@ -255,16 +259,16 @@ class Whale(object):
                         shuffle=False, pin_memory=True)
         
         score = []
-        for t_features in score_dataset:
-            score += self.model.head_model(t_features)
+        for t_features in tqdm(score_dataset):
+            score.extend(self.model.head_model(t_features).cpu().data.numpy())
 
-        score = self.score_reshape(score, features)
+        score = self.score_reshape(score, fknown, fsubmit)
 
     # Evaluate the model.
     
     # Generate the subsmission file.
-        self.prepare_submission(0.99, 'zl_mpiotte-standard_lstm.csv.gz')
-        
+        self.prepare_submission(score, 0.99, 'zl_mpiotte-standard_pytorch.csv.gz')
+        print('complete ')
         
         
         
