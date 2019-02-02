@@ -123,6 +123,7 @@ class Whale(object):
         train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
         for epoch in tqdm(range(step)):
+            loss = 0
             for image_pairs, ts in tqdm(train_dataset):
                 if self.use_gpu:
                     image_pairs = Variable(image_pairs.cuda().float())
@@ -136,8 +137,9 @@ class Whale(object):
                 print('loss ', loss_c)
                 loss_c.backward()
                 self.optimizer.step()
-                self.writer.add_scalar('train/conf_loss', loss_c, steps)
-                print('loss ', loss_c)
+                loss += loss_c.data[0]
+            self.writer.add_scalar('train/conf_loss', loss, steps + epoch)
+            print('loss ', loss)
             self.train_data.on_epoch_end()
             train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
