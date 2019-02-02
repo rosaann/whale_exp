@@ -145,13 +145,13 @@ class Whole_Model(nn.Module):
         xa = self.branch_model(x[:,0])
         xb = self.branch_model(x[:,1])
         print('xa ', xa.shape)
-        x = []
-        for i in range(len(xa)):
-            print('xi ', xa[i].shape)
-            x.append([xa[i], xb[i]])
-            print('xx ', x)
-            print('xx s ', np.array(x).shape)
-        x = np.array(x)
+    #    x = []
+    #    for i in range(len(xa)):
+    #        print('xi ', xa[i].shape)
+    #        x.append([xa[i], xb[i]])
+    #        print('xx ', x)
+    #        print('xx s ', np.array(x).shape)
+        x = torch.cat((xa,xb), 1)
         print('x ', x.shape)
 
         #x = Variable(x.cuda().float())
