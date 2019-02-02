@@ -102,7 +102,7 @@ class Header_Model(nn.Module):
 
         self.flatten = Flatten()
         
-        self.dense = nn.Sequential(nn.Linear(-1, 1, bias = True), nn.Sigmoid())
+        self.dense = nn.Sequential(nn.Linear(478, 1, bias = True), nn.Sigmoid())
 
     def forward(self, x):
        # x = x.squeeze()
