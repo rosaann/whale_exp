@@ -105,6 +105,7 @@ class Header_Model(nn.Module):
         self.dense = nn.Sequential(nn.Linear(1, 1, bias = True), nn.Sigmoid())
 
     def forward(self, x):
+        x = x.squeeze()
         print('x ', x.shape)
         x_0 = x[:,0]
         x_1 = x[:,1]
