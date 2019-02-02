@@ -129,9 +129,9 @@ class Whale(object):
                     image_pairs = Variable(image_pairs.cuda().float())
                 
                 ts = np.array(ts)
+                ts = ts[:, np.newaxis]
                 self.model.train()
                 out = self.model(image_pairs)
-                out = out.squeeze(1)
                 self.optimizer.zero_grad()
                 print('out ', out)
                 print('ts ', ts)
