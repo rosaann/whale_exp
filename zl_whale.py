@@ -154,13 +154,16 @@ class Whale(object):
         for param_group in self.optimizer.param_groups:
             param_group['lr'] = lr
     def train(self):
-        if True:
+        if False:
             self.model = torch.load('mpiotte_model_torch.model')
             return
         self.steps = 0
         file_name = 'mpiotte_model_torch.model'
         self.make_steps(1, 1000)
         torch.save(self.model.state_dict(), file_name)
+        torch.save(self.model.branch_model.state_dict(), 'branch_' + file_name)
+        torch.save(self.model.header_model.state_dict(), 'header_'+ file_name)
+
         return
         if False:
             tmp = keras.models.load_model('mpiotte-standard.model')
