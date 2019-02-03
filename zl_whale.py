@@ -118,8 +118,8 @@ class Whale(object):
 
      
         # Compute the match score for each picture pair
-       # features, score = self.compute_score()
-        score = np.random.random_sample(size=(len(self.train_data.train),len(self.train_data.train)))
+        features, score = self.compute_score()
+        #score = np.random.random_sample(size=(len(self.train_data.train),len(self.train_data.train)))
         self.train_data.setupScore(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=32)
         train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
@@ -155,22 +155,13 @@ class Whale(object):
             param_group['lr'] = lr
     def train(self):
         file_name = 'mpiotte_model_torch.model'
-
+        self.steps = 0
         if False:
             self.model = torch.load(file_name)
             self.model.branch_model = torch.load('branch_' + file_name)
             self.model.header_model = torch.load('header_' + file_name)
             return
-        self.steps = 0
-        self.make_steps(1, 1000)
-        torch.save(self.model.state_dict(), file_name)
-        torch.save(self.model.branch_model.state_dict(), 'branch_' + file_name)
-        torch.save(self.model.header_model.state_dict(), 'header_'+ file_name)
-
-        return
-        if False:
-            tmp = keras.models.load_model('mpiotte-standard.model')
-            model.set_weights(tmp.get_weights())
+        
         else:
             # epoch -> 10
             self.make_steps(10, 1000)
@@ -206,7 +197,8 @@ class Whale(object):
             for _ in range(2): self.make_steps(5, 0.25)
 
             torch.save(self.model.state_dict(), file_name)
-
+            torch.save(self.model.branch_model.state_dict(), 'branch_' + file_name)
+            torch.save(self.model.header_model.state_dict(), 'header_'+ file_name)
 
     def prepare_submission(self,score, threshold, filename):
         """
@@ -246,13 +238,8 @@ class Whale(object):
                 f.write(p + ',' + ' '.join(t[:5]) + '\n')
         return vtop,vhigh,pos
 
+    
     def test(self):
-        self.train_data.load_known()
-
-        score = np.random.random_sample(size=(len(self.train_data.known),len(self.train_data.submit)))
-        self.prepare_submission(score, 0.99, 'zl_mpiotte-standard_pytorch.csv.gz')
-        print('complete ')
-    def test_2(self):
         self.train_data.load_known()
         
         feature_data = FeatureGen(self.train_data.known, self.train_data)
