@@ -154,6 +154,9 @@ class Whale(object):
         for param_group in self.optimizer.param_groups:
             param_group['lr'] = lr
     def train(self):
+        if True:
+            self.model = torch.load('mpiotte_model_torch.model')
+            return
         self.steps = 0
         file_name = 'mpiotte_model_torch.model'
         self.make_steps(1, 1000)
@@ -246,7 +249,7 @@ class Whale(object):
         fknown = []
         for images in tqdm(feature_dataset):
             if self.use_gpu:
-                images = Variable(images.cuda())
+                images = Variable(images.cuda().float())
             fknown.extend(self.model.branch_model(images).cpu().data.numpy()  )  
         fknown = np.array(fknown)
         ##
@@ -257,7 +260,7 @@ class Whale(object):
         fsubmit = []
         for images in tqdm(feature_data_s_set):
             if self.use_gpu:
-                images = Variable(images.cuda())
+                images = Variable(images.cuda().float())
             fsubmit.extend(self.model.branch_model(images).cpu().data.numpy() )
         
         fsubmit = np.array(fsubmit)
