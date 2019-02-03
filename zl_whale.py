@@ -137,7 +137,7 @@ class Whale(object):
                # print('out ', out)
               #  print('ts ', ts)
                 loss_c = self.criterion(out, ts)
-                print('loss ', loss_c)
+              #  print('loss ', loss_c)
                 loss_c.backward()
                 self.optimizer.step()
                 loss += loss_c.item()
