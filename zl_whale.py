@@ -156,7 +156,7 @@ class Whale(object):
     def train(self):
         file_name = 'mpiotte_model_torch.model'
 
-        if True:
+        if False:
             self.model = torch.load(file_name)
             self.model.branch_model = torch.load('branch_' + file_name)
             self.model.header_model = torch.load('header_' + file_name)
