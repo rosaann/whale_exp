@@ -141,19 +141,20 @@ class Whale(object):
                 loss_c.backward()
                 self.optimizer.step()
                 loss += loss_c.item()
-            self.writer.add_scalar('train/conf_loss', loss, steps + epoch)
-            print('loss ', loss)
+            self.writer.add_scalar('train/conf_loss', loss, self.steps + epoch)
+            print('loss ', loss, ' steps ', self.steps)
             self.train_data.on_epoch_end()
             train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
    
-        steps += step
+        self.steps += step
     
     
     def set_lr(self, lr):
         for param_group in self.optimizer.param_groups:
             param_group['lr'] = lr
     def train(self):
+        self.steps = 0
         file_name = 'mpiotte_model_torch.model'
         self.make_steps(1, 1000)
         torch.save(self.model.state_dict(), file_name)
