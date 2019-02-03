@@ -248,6 +248,12 @@ class Whale(object):
 
     def test(self):
         self.train_data.load_known()
+
+        score = np.random.random_sample(size=(len(self.train_data.known),len(self.train_data.submit)))
+        self.prepare_submission(score, 0.99, 'zl_mpiotte-standard_pytorch.csv.gz')
+        print('complete ')
+    def test_2(self):
+        self.train_data.load_known()
         
         feature_data = FeatureGen(self.train_data.known, self.train_data)
         feature_dataset = data.DataLoader(feature_data, 32, num_workers= 8,
