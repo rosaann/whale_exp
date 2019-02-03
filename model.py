@@ -18,16 +18,16 @@ class Sub_Block(nn.Module):
         self.x = nn.BatchNorm2d(layers_in)
         layers = nn.ModuleList()
         layers.append(nn.Conv2d(layers_in, layers_out, kernel_size=1, stride = stride, bias=False))
-        layers.append(nn.ReLU(inplace=True))
+        layers.append(nn.ReLU())
         layers.append(nn.BatchNorm2d(layers_out))
         layers.append(nn.Conv2d(layers_out, layers_out, kernel_size=3, stride = stride,padding=1, bias=False))
-        layers.append(nn.ReLU(inplace=True))
+        layers.append(nn.ReLU())
         layers.append(nn.BatchNorm2d(layers_out))
         layers.append(nn.Conv2d(layers_out, layers_in, kernel_size=1, stride = stride, bias=False))
-        layers.append(nn.ReLU(inplace=True))
+        layers.append(nn.ReLU())
         
         self.y = layers
-        self.act = nn.ReLU(inplace=True)
+        self.act = nn.ReLU()
     def forward(self, x):
        # print('sub in ', x.shape)
         out_x = self.x(x)
@@ -48,37 +48,37 @@ class Branch_Model(nn.Module):
         super(Branch_Model, self).__init__()
         self.layers = nn.ModuleList()
         self.layers.append(nn.Conv2d(1, 64, kernel_size=9, stride=2))
-        self.layers.append(nn.ReLU(inplace=True))
+        self.layers.append(nn.ReLU())
         self.layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         for _ in range(2):
             self.layers.append(nn.BatchNorm2d(64))
             self.layers.append(nn.Conv2d(64, 64, kernel_size=3))
-        self.layers.append(nn.ReLU(inplace=True))
+        self.layers.append(nn.ReLU())
         self.layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         self.layers.append(nn.BatchNorm2d(64))
         self.layers.append(nn.Conv2d(64, 128, kernel_size=1))
-        self.layers.append(nn.ReLU(inplace=True))
+        self.layers.append(nn.ReLU())
         for _ in range(4):
             self.layers.append(Sub_Block(128, 64))
             
         self.layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         self.layers.append(nn.BatchNorm2d(128))
         self.layers.append(nn.Conv2d(128, 256, kernel_size=1))
-        self.layers.append(nn.ReLU(inplace=True))
+        self.layers.append(nn.ReLU())
         for _ in range(4):
             self.layers.append(Sub_Block(256, 64))    
             
         self.layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         self.layers.append(nn.BatchNorm2d(256))
         self.layers.append(nn.Conv2d(256, 384, kernel_size=1))
-        self.layers.append(nn.ReLU(inplace=True))
+        self.layers.append(nn.ReLU())
         for _ in range(4):
             self.layers.append(Sub_Block(384, 96))  
             
         self.layers.append(nn.MaxPool2d(kernel_size=2, stride=2))
         self.layers.append(nn.BatchNorm2d(384))
         self.layers.append(nn.Conv2d(384, 512, kernel_size=1))
-        self.layers.append(nn.ReLU(inplace=True))
+        self.layers.append(nn.ReLU())
         for _ in range(4):
             self.layers.append(Sub_Block(512, 128)  )
              
@@ -96,7 +96,7 @@ class Flatten(nn.Module):
 class Header_Model(nn.Module):
     def __init__(self):
         super(Header_Model, self).__init__()  
-        self.layer_1 = nn.Sequential(nn.Conv2d(4, 32, kernel_size=(4, 1), padding=0), nn.ReLU(inplace=True))
+        self.layer_1 = nn.Sequential(nn.Conv2d(4, 32, kernel_size=(4, 1), padding=0), nn.ReLU())
         #self.layer_2 = nn.Sequential(nn.Conv2d(32, 32, kernel_size=(1, 32)), nn.Linear(32, 1))
         self.layer_2 = nn.Sequential(nn.Conv2d(32, 1, kernel_size=(32, 1), padding=0))
 
