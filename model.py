@@ -102,11 +102,10 @@ class Header_Model(nn.Module):
 
         self.flatten = Flatten()
         
-        self.dense = nn.Sequential(nn.Linear(2097152, 1, bias = True), nn.Sigmoid())#478
+        self.dense = nn.Sequential(nn.Linear(478, 1, bias = True), nn.Sigmoid())#
 
     def forward(self, x):
-        out = self.dense(x)
-        return out
+        
        # print('x in head', x.shape)
         x_0 = x[:,0]
         x_1 = x[:,1]
