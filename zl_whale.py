@@ -275,7 +275,7 @@ class Whale(object):
         
         score = []
         for t_features in tqdm(score_dataset):
-            score.extend(self.model.head_model(t_features).cpu().data.numpy())
+            score.extend(self.model.header_model(t_features).cpu().data.numpy())
 
         score = self.score_reshape(score, fknown, fsubmit)
 
