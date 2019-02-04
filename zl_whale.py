@@ -72,7 +72,7 @@ class Whale(object):
         
         features = []
         i = 0
-        self.model.branch_model.eval()
+      #  self.model.branch_model.eval()
         for images in tqdm(feature_dataset):
             if self.use_gpu:
                 images = Variable(images.cuda().float())
@@ -87,7 +87,7 @@ class Whale(object):
                         shuffle=False, pin_memory=False)
         
         score = []
-        self.model.header_model.eval()
+    #    self.model.header_model.eval()
         for t_features in tqdm(score_dataset):
             if self.use_gpu:
                 t_features = Variable(t_features.cuda().float())
