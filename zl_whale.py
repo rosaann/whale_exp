@@ -80,7 +80,8 @@ class Whale(object):
           #  print('f ', f.shape, ' ', i)
             i += 1
             features.extend( f.cpu().data.numpy() )     
-        features = np.array(features)     
+        features = np.array(features)
+        print('features ', features[:5])
         
         score_data = ScoreGen(features, verbose=verbose)
         score_dataset = data.DataLoader(score_data, 2048, num_workers= 8,
@@ -94,6 +95,7 @@ class Whale(object):
             score.extend(self.model.header_model(t_features).cpu().data.numpy())
         
         score = np.array(score)
+        print('score ', score[:5])
         score = self.score_reshape(score, features)
         
         #features = self.model.branch_model.predict_generator(FeatureGen(self.dataset.train, self.dataset,verbose=verbose), max_queue_size=12, workers=6, verbose=0)
@@ -134,15 +136,18 @@ class Whale(object):
                 self.model.train()
                 out = self.model(image_pairs)
                 self.optimizer.zero_grad()
-               # print('out ', out)
-              #  print('ts ', ts)
+                
                 loss_c = self.criterion(out, ts)
               #  print('loss ', loss_c)
                 loss_c.backward()
                 self.optimizer.step()
                 loss += loss_c.item()
+                if loss == 0:
+                    print('out ', out[:10])
+                    print('ts ', ts[:10])
+                    
             self.writer.add_scalar('train/conf_loss', loss, self.steps + epoch)
-            print('loss ', loss, ' steps ', self.steps)
+            print('loss ', loss, ' steps ', self.steps + epoch)
             self.train_data.on_epoch_end()
             train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)

@@ -247,7 +247,8 @@ class WhaleDataSet(data.Dataset):
                 if h not in self.w2ts[w]: self.w2ts[w].append(h)
         for w,ts in self.w2ts.items(): self.w2ts[w] = np.array(ts)
         
-        # Map training picture hash value to index in 'train' array    
+        # Map training picture hash value to index in 'train' array
+        print('w2ts:', self.w2ts[:5])
         t2i  = {}
         for i,t in enumerate(self.train): t2i[t] = i   
         
