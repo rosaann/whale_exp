@@ -248,7 +248,7 @@ class WhaleDataSet(data.Dataset):
         for w,ts in self.w2ts.items(): self.w2ts[w] = np.array(ts)
         
         # Map training picture hash value to index in 'train' array
-        print('w2ts:', self.w2ts[:5])
+        print('w2ts:', list(self.w2ts)[:5])
         t2i  = {}
         for i,t in enumerate(self.train): t2i[t] = i   
         
