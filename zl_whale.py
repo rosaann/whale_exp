@@ -21,7 +21,7 @@ import random
 import gzip
 from tqdm import tqdm
 from torchsummary import summary
-from tool.vis_tool import viz_module_feature_maps
+from tool.vis_tool import viz_model
 
 class Whale(object):
     def __init__(self):
@@ -36,7 +36,7 @@ class Whale(object):
             cudnn.benchmark = True  
             
         self.train_data = WhaleDataSet()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=64e-3)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=64e-2)
         self.criterion = ModelLoss(self.use_gpu)
 
         self.writer = SummaryWriter(log_dir='out/')
@@ -121,8 +121,8 @@ class Whale(object):
 
      
         # Compute the match score for each picture pair
-        features, score = self.compute_score()
-        #score = np.random.random_sample(size=(len(self.train_data.train),len(self.train_data.train)))
+        #features, score = self.compute_score()
+        score = np.random.random_sample(size=(len(self.train_data.train),len(self.train_data.train)))
         self.train_data.setupScore(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=32)
         train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
@@ -161,7 +161,7 @@ class Whale(object):
       #  if self.use_gpu:
      #       image_pairs = Variable(image_pairs.cuda().float())
     #    print('image shpe', image.shape)
-        base_out = viz_module_feature_maps(self.writer, self.model, image_pairs, module_name='base', epoch=epoch,prefix='module_feature_maps_' )
+        base_out = viz_model(self.writer, self.model, image_pairs, module_name='base', epoch=epoch,prefix='module_feature_maps_' )
     
     def set_lr(self, lr):
         for param_group in self.optimizer.param_groups:
