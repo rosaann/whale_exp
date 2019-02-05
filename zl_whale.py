@@ -21,6 +21,7 @@ import random
 import gzip
 from tqdm import tqdm
 from torchsummary import summary
+from tool.vis_tool import viz_module_feature_maps
 
 class Whale(object):
     def __init__(self):
@@ -145,6 +146,7 @@ class Whale(object):
                 if loss == 0:
                     print('out ', out[:10])
                     print('ts ', ts[:10])
+                    self.vis_img(image_pairs)
                     
             self.writer.add_scalar('train/conf_loss', loss, self.steps + epoch)
             print('loss ', loss, ' steps ', self.steps + epoch)
@@ -154,6 +156,11 @@ class Whale(object):
    
         self.steps += step
     
+    def vis_img(self, image_pairs):
+      #  if self.use_gpu:
+     #       image_pairs = Variable(image_pairs.cuda().float())
+    #    print('image shpe', image.shape)
+        base_out = viz_module_feature_maps(self.writer, self.model, image_pairs, module_name='base', epoch=epoch,prefix='module_feature_maps_' )
     
     def set_lr(self, lr):
         for param_group in self.optimizer.param_groups:
