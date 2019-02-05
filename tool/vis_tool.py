@@ -112,7 +112,7 @@ def viz_grads(writer, model, feature_maps, target_image, target_mean, module_nam
         
         writer.add_image('{}/{}'.format(prefix, name), x, epoch)
 def viz_model(writer, module, input_image, module_name='base', epoch=0, mode='one', prefix='module_feature_maps'):
-    y, vis_list = module(input_image)
+    y, vis_list = module(input_image, phase='eval')
     for feature_maps in vis_list:
         viz_feature_maps(writer, feature_maps, module_name, epoch, prefix)
 def viz_module_feature_maps(writer, module, input_image, module_name='base', epoch=0, mode='one', prefix='module_feature_maps'):
