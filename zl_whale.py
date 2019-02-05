@@ -142,11 +142,12 @@ class Whale(object):
               #  print('loss ', loss_c)
                 loss_c.backward()
                 self.optimizer.step()
-                loss += loss_c.item()
+                
                 if loss == 0:
                     print('out ', out[:10])
                     print('ts ', ts[:10])
-                self.vis_img(image_pairs)
+                loss += loss_c.item()
+                self.vis_img(image_pairs, self.steps + epoch)
                     
             self.writer.add_scalar('train/conf_loss', loss, self.steps + epoch)
             print('loss ', loss, ' steps ', self.steps + epoch)
@@ -156,7 +157,7 @@ class Whale(object):
    
         self.steps += step
     
-    def vis_img(self, image_pairs):
+    def vis_img(self, image_pairs,epoch):
       #  if self.use_gpu:
      #       image_pairs = Variable(image_pairs.cuda().float())
     #    print('image shpe', image.shape)
