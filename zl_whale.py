@@ -124,7 +124,7 @@ class Whale(object):
         features, score = self.compute_score()
         #score = np.random.random_sample(size=(len(self.train_data.train),len(self.train_data.train)))
         self.train_data.setupScore(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=32)
-        train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
+        train_dataset = data.DataLoader(self.train_data, 40, num_workers= 8,
                         shuffle=False, pin_memory=True)
         for epoch in tqdm(range(step)):
             loss = 0

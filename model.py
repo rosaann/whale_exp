@@ -200,7 +200,7 @@ class ModelLoss(nn.Module):
     def __init__(self, use_gpu=True):
         super(ModelLoss, self).__init__()
         self.use_gpu = use_gpu
-        self.cri = nn.BCEWithLogitsLoss()
+        self.cri = nn.MSELoss()
     
     def forward(self, predictions, targets):
         conf_data = predictions
