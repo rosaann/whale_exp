@@ -146,7 +146,7 @@ class Whale(object):
                 if loss == 0:
                     print('out ', out[:10])
                     print('ts ', ts[:10])
-                    self.vis_img(image_pairs)
+                self.vis_img(image_pairs)
                     
             self.writer.add_scalar('train/conf_loss', loss, self.steps + epoch)
             print('loss ', loss, ' steps ', self.steps + epoch)
