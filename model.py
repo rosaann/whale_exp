@@ -122,7 +122,7 @@ class Header_Model(nn.Module):
 
         self.flatten = Flatten()
         
-        self.dense = nn.Sequential(nn.Linear(1, 1, bias = True), nn.Sigmoid())#
+        self.dense = nn.Sequential(nn.Linear(509, 1, bias = True), nn.Sigmoid())#
 
     def forward(self, x, phase='train'):
         
