@@ -30,29 +30,29 @@ class Sub_Block(nn.Module):
         self.act = nn.ReLU()
     def forward(self, x, phase='train'):
        # print('sub in ', x.shape)
-        if phase == 'eval':
-            vis_list = []
+       # if phase == 'eval':
+       #     vis_list = []
         out_x = self.x(x)
-        if phase == 'eval':
-            vis_list.append(out_x)
+      #  if phase == 'eval':
+      #      vis_list.append(out_x)
         out_y = out_x
         for i in range(len(self.y)):
             out_y = (self.y[i])(out_y)
-            if phase == 'eval':
-                vis_list.append(out_y)
+      #      if phase == 'eval':
+      #          vis_list.append(out_y)
         #    print('out_y ', out_y.shape)
     #    print('out_x ', out_x.shape)
 
        # out = torch.add(out_x, out_y)
         out_y += out_x
-        if phase == 'eval':
-                vis_list.append(out_y)
+      #  if phase == 'eval':
+      #          vis_list.append(out_y)
         out_y = self.act(out_y)
-        if phase == 'eval':
-                vis_list.append(out_y)
+      #  if phase == 'eval':
+      #          vis_list.append(out_y)
      #   print('sub out ', out_y.shape)
-        if phase == 'eval':
-                return out_y, vis_list
+     #   if phase == 'eval':
+     #           return out_y, vis_list
         return out_y
         
 class Branch_Model(nn.Module):
@@ -98,17 +98,17 @@ class Branch_Model(nn.Module):
        # print('x ', x.shape)
         out = x
         
-        if phase == 'eval':
-            vis_list = []
+      #  if phase == 'eval':
+      #      vis_list = []
         for i in range(len(self.layers)):
             out = (self.layers[i])(out)
-            if phase == 'eval':
-                vis_list.append(out)
+       #     if phase == 'eval':
+       #         vis_list.append(out)
        # print('x2 ', out.shape)
         out = F.max_pool2d(out, kernel_size=out.size()[2:])
-        if phase == 'eval':
-            vis_list.append(out)
-            return out, vis_list
+      #  if phase == 'eval':
+     #       vis_list.append(out)
+      #      return out, vis_list
         return out
 class Flatten(nn.Module):
     def forward(self, input):
@@ -118,7 +118,7 @@ class Header_Model(nn.Module):
         super(Header_Model, self).__init__()  
         self.layer_1 = nn.Sequential(nn.Conv2d(4, 32, kernel_size=(4, 1), padding=0), nn.ReLU())
         #self.layer_2 = nn.Sequential(nn.Conv2d(32, 32, kernel_size=(1, 32)), nn.Linear(32, 1))
-        self.layer_2 = nn.Sequential(nn.Conv2d(32, 1, kernel_size=(32, 1), padding=0))
+        self.layer_2 = nn.Sequential(nn.Conv2d(1, 32, kernel_size=(32, 1), padding=0))
 
         self.flatten = Flatten()
         
@@ -138,30 +138,30 @@ class Header_Model(nn.Module):
      #   print('x3 ', x3.shape)
         x4 = torch.mul(x3, x3)
       #  print('x4 ', x4.shape)
-        out = torch.cat((x1, x2, x3, x4), -1)
+        out = torch.cat((x1, x2, x3, x4), 0)
      #   print('out1 ', out.shape)
         out = out.view(x.shape[0], 4, -1, 1)
-        if phase == 'eval':
-            vis_list = []
+     #   if phase == 'eval':
+     #       vis_list = []
       #  print('out shape ', out.shape)
         out = self.layer_1(out)
-        if phase == 'eval':
-            vis_list.append(out)
+      #  if phase == 'eval':
+      #      vis_list.append(out)
       #  print('out1 shape ', out.shape)
-        out = out.view(x.shape[0],32, -1, 1)
-        if phase == 'eval':
-            vis_list.append(out)
+        out = out.view(x.shape[0],-1, 32, 1)
+     #   if phase == 'eval':
+     #       vis_list.append(out)
       #  print('out2 shape ', out.shape)
         out = self.layer_2(out)
-        if phase == 'eval':
-            vis_list.append(out)
+     #   if phase == 'eval':
+     #       vis_list.append(out)
      #   print('out3 shape ', out.shape)
         out = self.flatten(out)
       #  print('out4 shape ', out.shape)
         out = self.dense(out)
      #   print('out5 shape ', out.shape)
-        if phase == 'eval':
-            return out, vis_list
+     #   if phase == 'eval':
+     #       return out, vis_list
         return out
     
 class Whole_Model(nn.Module):
@@ -171,28 +171,28 @@ class Whole_Model(nn.Module):
         self.header_model = Header_Model()
     
     def forward(self, x, phase='train'):
-        if phase == 'eval':
-            xa, vis_a = self.branch_model(x[:,0], phase = phase)
-            xb, vis_b = self.branch_model(x[:,1], phase = phase)
-        else:
-            xa = self.branch_model(x[:,0])
-            xb = self.branch_model(x[:,1])
+     #   if phase == 'eval':
+     #       xa, vis_a = self.branch_model(x[:,0], phase = phase)
+    #        xb, vis_b = self.branch_model(x[:,1], phase = phase)
+     #   else:
+        xa = self.branch_model(x[:,0])
+        xb = self.branch_model(x[:,1])
 
         xa = xa.unsqueeze(1)
         xb = xb.unsqueeze(1)
         x = torch.cat((xa,xb), 1)
         
-        if phase == 'eval':
-            x, vis_x = self.header_model(x, phase = phase)
-        else:
-            x = self.header_model(x)
+     #   if phase == 'eval':
+     #       x, vis_x = self.header_model(x, phase = phase)
+     #   else:
+        x = self.header_model(x)
             
-        if phase == 'eval':
-            vis = []
-            vis.extend(vis_a)
-            vis.extend(vis_b)
-            vis.extend(vis_x)
-            return x, vis
+    #    if phase == 'eval':
+     #       vis = []
+    #        vis.extend(vis_a)
+    #        vis.extend(vis_b)
+    #        vis.extend(vis_x)
+    #        return x, vis
         return x
     
     
