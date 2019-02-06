@@ -82,7 +82,7 @@ class Whale(object):
             i += 1
             features.extend( f.cpu().data.numpy() )     
         features = np.array(features)
-        print('features ', features[:5])
+       # print('features ', features[:5])
         
         score_data = ScoreGen(features, verbose=verbose)
         score_dataset = data.DataLoader(score_data, 2048, num_workers= 8,
