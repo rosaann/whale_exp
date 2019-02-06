@@ -118,11 +118,11 @@ class Header_Model(nn.Module):
         super(Header_Model, self).__init__()  
         self.layer_1 = nn.Sequential(nn.Conv2d(4, 32, kernel_size=(4, 1), padding=0), nn.ReLU())
         #self.layer_2 = nn.Sequential(nn.Conv2d(32, 32, kernel_size=(1, 32)), nn.Linear(32, 1))
-        self.layer_2 = nn.Sequential(nn.Conv2d(1, 32, kernel_size=(32, 1), padding=0))
+        self.layer_2 = nn.Sequential(nn.Conv2d(509, 1, kernel_size=(1, 32), padding='valid'))
 
         self.flatten = Flatten()
         
-        self.dense = nn.Sequential(nn.Linear(478, 1, bias = True), nn.Sigmoid())#
+        self.dense = nn.Sequential(nn.Linear(1, 1, bias = True), nn.Sigmoid())#
 
     def forward(self, x, phase='train'):
         
@@ -151,15 +151,15 @@ class Header_Model(nn.Module):
         out = out.view(x.shape[0],-1, 32, 1)
      #   if phase == 'eval':
      #       vis_list.append(out)
-      #  print('out2 shape ', out.shape)
+        print('out2 shape ', out.shape)
         out = self.layer_2(out)
      #   if phase == 'eval':
      #       vis_list.append(out)
-     #   print('out3 shape ', out.shape)
+        print('out3 shape ', out.shape)
         out = self.flatten(out)
-      #  print('out4 shape ', out.shape)
+        print('out4 shape ', out.shape)
         out = self.dense(out)
-     #   print('out5 shape ', out.shape)
+        print('out5 shape ', out.shape)
      #   if phase == 'eval':
      #       return out, vis_list
         return out
