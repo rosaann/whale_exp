@@ -138,7 +138,7 @@ class Header_Model(nn.Module):
         print('x3 ', x3.shape)
         x4 = torch.mul(x3, x3)
         print('x4 ', x4.shape)
-        out = torch.cat((x1, x2, x3, x4), 0)
+        out = torch.cat((x1, x2, x3, x4), 1)
         print('out1 ', out.shape)
         out = out.view(x.shape[0], 4, -1, 1)
      #   if phase == 'eval':
