@@ -85,7 +85,7 @@ class Whale(object):
        # print('features ', features[:5])
         
         score_data = ScoreGen(features, verbose=verbose)
-        score_dataset = data.DataLoader(score_data, 2048, num_workers= 8,
+        score_dataset = data.DataLoader(score_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=False)
         
         score = []
