@@ -187,7 +187,7 @@ class Whole_Model(nn.Module):
         x = torch.cat((xa,xb), 1)
        
             
-        print('xa -3 ', xa.shape)
+        print('xa -3 ', x.shape)
 
      #   if phase == 'eval':
      #       x, vis_x = self.header_model(x, phase = phase)
