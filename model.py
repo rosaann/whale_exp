@@ -129,9 +129,10 @@ class Header_Model(nn.Module):
        # print('x in head', x.shape)
         x_0 = x[:,0]
         x_1 = x[:,1]
-      #  print('x_0 ', x_0.shape)
-        x1 = x_0 * x_1
-      #  print('x1 ', x1.shape)
+        print('x_0 ', x_0.shape)
+        #x1 = x_0 * x_1
+        x1 = x_0.unsqueeze(1).bmm(x_1.unsqueeze(2)).squeeze()
+        print('x1 ', x1.shape)
         x2 = x_0 + x_1
       #  print('x2 ', x2.shape)
         x3 = torch.abs(x_0 - x_1)
