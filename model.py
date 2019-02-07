@@ -175,25 +175,24 @@ class Whole_Model(nn.Module):
      #       xa, vis_a = self.branch_model(x[:,0], phase = phase)
     #        xb, vis_b = self.branch_model(x[:,1], phase = phase)
      #   else:
-        print('in ', x.shape)
+       # print('in ', x.shape)
         xa = self.branch_model(x[:,0])
         xb = self.branch_model(x[:,1])
-        print('xa -1 ', xa.shape)
+     #   print('xa -1 ', xa.shape)
 
         xa = xa.unsqueeze(1)
         xb = xb.unsqueeze(1)
         print('xa -2 ', xa.shape)
 
-       # x = torch.cat((xa,xb), 1)
-        for i, xa_a in enumerate(xa):
-            xa[i] = xa[i].append(xb[i])
+        x = torch.cat((xa,xb), 1)
+       
             
         print('xa -3 ', xa.shape)
 
      #   if phase == 'eval':
      #       x, vis_x = self.header_model(x, phase = phase)
      #   else:
-        x = self.header_model(xa)
+        x = self.header_model(x)
             
     #    if phase == 'eval':
      #       vis = []
