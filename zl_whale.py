@@ -36,7 +36,7 @@ class Whale(object):
             cudnn.benchmark = True  
             
         self.train_data = WhaleDataSet()
-        self.optimizer = optim.Adam(self.model.parameters(), lr=64e-2)
+        self.optimizer = optim.Adam(self.model.parameters(), lr=64e-5)
         self.criterion = ModelLoss(self.use_gpu)
 
         self.writer = SummaryWriter(log_dir='out/')
@@ -121,8 +121,8 @@ class Whale(object):
 
      
         # Compute the match score for each picture pair
-        #features, score = self.compute_score()
-        score = np.random.random_sample(size=(len(self.train_data.train),len(self.train_data.train)))
+        features, score = self.compute_score()
+        #score = np.random.random_sample(size=(len(self.train_data.train),len(self.train_data.train)))
         self.train_data.setupScore(score + ampl*np.random.random_sample(size=score.shape), steps=step, batch_size=32)
         train_dataset = data.DataLoader(self.train_data, 32, num_workers= 8,
                         shuffle=False, pin_memory=True)
@@ -186,13 +186,13 @@ class Whale(object):
                 # epoch -> 150
             for _ in range(18): self.make_steps(5, 1.0)
             # epoch -> 200
-            self.set_lr( 16e-3)
+            self.set_lr( 16e-5)
             for _ in range(10): self.make_steps(5, 0.5)
             # epoch -> 240
-            self.set_lr( 4e-3)
+            self.set_lr( 4e-5)
             for _ in range(8): self.make_steps(5, 0.25)
             # epoch -> 250
-            self.set_lr( 1e-3)
+            self.set_lr( 1e-5)
             for _ in range(2): self.make_steps(5, 0.25)
             # epoch -> 300
            # weights = model.get_weights()
@@ -200,13 +200,13 @@ class Whale(object):
            # model.set_weights(weights)
             for _ in range(10): self.make_steps(5, 1.0)
             # epoch -> 350
-            self.set_lr( 16e-3)
+            self.set_lr( 16e-5)
             for _ in range(10): self.make_steps(5, 0.5)    
             # epoch -> 390
-            self.set_lr( 4e-3)
+            self.set_lr( 4e-5)
             for _ in range(8): self.make_steps(5, 0.25)
             # epoch -> 400
-            self.set_lr( 1e-3)
+            self.set_lr( 1e-5)
             for _ in range(2): self.make_steps(5, 0.25)
 
             torch.save(self.model.state_dict(), file_name)
