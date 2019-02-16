@@ -386,6 +386,7 @@ class TrainingData(Sequence):
         
         match_len = len(self.match)
         i_list = random.shuffle(list(range(len(train))))
+        print(i_list)
         selected_list = []
         for i in range(match_len):
             m1 = 0
