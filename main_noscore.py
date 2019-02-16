@@ -403,8 +403,8 @@ class TrainingData(Sequence):
                     i_list.remove(train_i)
                     break
             
-            print('m1 ', m1)
-
+         #   print('m1 ', m1)
+            if m1 == 0:continue
             m1ws = h2ws[m1]
             print('ws ', m1ws)
             for train_i in i_list:
