@@ -395,15 +395,16 @@ class TrainingData(Sequence):
             m2 = 0
             
             for train_i in i_list: 
-                if train_i not in selected_list:
+             #   if train_i not in selected_list:
                     m1 = train[i_list[train_i]]
-                    selected_list.append(train_i)
-                    t_i = train_i
+                   # selected_list.append(train_i)
+                   # t_i = train_i
+                    i_list.remove(train_i)
                     break
         
             m1ws = h2ws[m1]
-            for train_i in i_list[t_i:]:
-                if train_i not in selected_list:
+            for train_i in i_list:
+              #  if train_i not in selected_list:
                     h = train[i_list[train_i]]
                     ws = h2ws[h]
                     if_same_w = False
@@ -413,7 +414,8 @@ class TrainingData(Sequence):
                             break
                     if if_same_w == False:
                         m2 = h
-                        selected_list.append(train_i)
+                       # selected_list.append(train_i)
+                        i_list.remove(train_i)
                         break
                     
             if m1 != 0 and m2 != 0:
