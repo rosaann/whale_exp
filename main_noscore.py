@@ -386,7 +386,7 @@ class TrainingData(Sequence):
         
         match_len = len(self.match)
         print('len ', len(train))
-        print('lsit ', range(len(train)))
+        print('lsit ', list(range(len(train))))
         i_list = random.shuffle(list(range(len(train))))
         print(i_list)
         selected_list = []
