@@ -396,7 +396,7 @@ class TrainingData(Sequence):
             
             for train_i in i_list: 
              #   if train_i not in selected_list:
-                    m1 = train[i_list[train_i]]
+                    m1 = train[train_i]
                    # selected_list.append(train_i)
                    # t_i = train_i
                     i_list.remove(train_i)
@@ -405,7 +405,7 @@ class TrainingData(Sequence):
             m1ws = h2ws[m1]
             for train_i in i_list:
               #  if train_i not in selected_list:
-                    h = train[i_list[train_i]]
+                    h = train[train_i]
                     ws = h2ws[h]
                     if_same_w = False
                     for w in ws:
