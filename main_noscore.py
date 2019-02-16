@@ -402,8 +402,11 @@ class TrainingData(Sequence):
                    # t_i = train_i
                     i_list.remove(train_i)
                     break
-                
+            
+            print('m1 ', m1)
+
             m1ws = h2ws[m1]
+            print('ws ', m1ws)
             for train_i in i_list:
               #  if train_i not in selected_list:
                     h = train[train_i]
