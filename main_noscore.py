@@ -388,7 +388,7 @@ class TrainingData(Sequence):
         print('len ', len(train))
         i_list = list(range(len(train)))
         random.shuffle(i_list)
-        print(i_list)
+       # print(i_list)
         selected_list = []
         for i in range(match_len):
             m1 = 0
@@ -415,7 +415,7 @@ class TrainingData(Sequence):
                         break
                     
             if m1 != 0 and m2 != 0:
-                self.unmatch.append(m1, m2)
+                self.unmatch.append((m1, m2))
                         
                         
                         
