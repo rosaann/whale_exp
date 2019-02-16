@@ -385,7 +385,7 @@ class TrainingData(Sequence):
             for ab in zip(ts,d): self.match.append(ab)
         
         match_len = len(self.match)
-        print('len ', len(train))
+    #    print('len ', len(train))
         i_list = list(range(len(train)))
         random.shuffle(i_list)
        # print(i_list)
@@ -397,7 +397,7 @@ class TrainingData(Sequence):
             for train_i in i_list: 
              #   if train_i not in selected_list:
                     m1 = train[train_i]
-                    print('t_i ', train_i, ' m ', m1)
+                 #   print('t_i ', train_i, ' m ', m1)
                    # selected_list.append(train_i)
                    # t_i = train_i
                     i_list.remove(train_i)
@@ -406,7 +406,7 @@ class TrainingData(Sequence):
          #   print('m1 ', m1)
             if m1 == 0:continue
             m1ws = h2ws[m1]
-            print('ws ', m1ws)
+         #   print('ws ', m1ws)
             for train_i in i_list:
               #  if train_i not in selected_list:
                     h = train[train_i]
@@ -425,7 +425,9 @@ class TrainingData(Sequence):
             if m1 != 0 and m2 != 0:
                 self.unmatch.append((m1, m2))
                         
-                        
+            if len(i_list) == 0:
+                i_list = list(range(len(train)))
+                random.shuffle(i_list)
                         
                 
         # Construct unmatched whale pairs from the LAP solution.
@@ -443,6 +445,7 @@ class TrainingData(Sequence):
      #   self.score[y,x] = 10000.0
         random.shuffle(self.match)
         random.shuffle(self.unmatch)
+        
         print(len(self.match), len(train), len(self.unmatch), len(train))
      #   assert len(self.match) == len(train) and len(self.unmatch) == len(train)
     def __len__(self):
