@@ -385,7 +385,7 @@ class TrainingData(Sequence):
             for ab in zip(ts,d): self.match.append(ab)
         
         match_len = len(self.match)
-        i_list = random.shuffle(range(len(train)))
+        i_list = random.shuffle(list(range(len(train))))
         selected_list = []
         for i in range(match_len):
             m1 = 0
