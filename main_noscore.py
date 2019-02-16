@@ -390,7 +390,7 @@ class TrainingData(Sequence):
         random.shuffle(i_list)
        # print(i_list)
         selected_list = []
-        for i in range(match_len):
+        for i in tqdm(range(match_len)):
             m1 = 0
             m2 = 0
             for train_i in i_list: 
