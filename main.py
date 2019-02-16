@@ -611,6 +611,7 @@ class LossHistory(keras.callbacks.Callback):
     def on_epoch_end(self, batch, logs={}):
         writer.add_scalar('Train/loc_loss', logs.get('loss'), steps)
         writer.add_scalar('Train/acc', logs.get('acc'), steps)
+        steps += 1
         
 def score_reshape(score, x, y=None):
     """
@@ -713,7 +714,7 @@ def make_steps(step, ampl):
   #      feature_heatmap = cv2.applyColorMap(feature_map.astype(np.uint8), cv2.COLORMAP_JET)
   #      writer.add_image('{}/{}'.format(i, steps), feature_heatmap, steps)
     
-    steps += step
+  #  steps += step
     
     # Collect history data
     history['epochs'] = steps
