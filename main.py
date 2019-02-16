@@ -501,13 +501,13 @@ def build_model(lr, l2, activation='sigmoid'):
     for _ in range(4): x = subblock(x, 128, **kwargs)
     
     x             = GlobalMaxPooling2D()(x) # 512
-    print('d ',x.shape)
+  #  print('d ',x.shape)
   #  x = Bidirectional(LSTM(x.shape[0], return_sequences=True), input_shape=x.shape)(x)
     x = Reshape(( 512, 1))(x) 
-    print('d2 ',x.shape)
-    x = LSTM(512, return_sequences=False)(x)
+  #  print('d2 ',x.shape)
+  #  x = LSTM(512, return_sequences=False)(x)
 
-    print('d3 ',x.shape)
+  #  print('d3 ',x.shape)
     branch_model  = Model(inp, x)
     ############
     #lstm model
@@ -558,12 +558,17 @@ def build_model(lr, l2, activation='sigmoid'):
 
 model, branch_model, head_model = build_model(64e-5,0)
 head_model.summary()
+branch_model.summary()
+model.summary()
 
 plot_model(head_model, to_file='head-model.png')
 pil_image.open('head-model.png')
 
 plot_model(branch_model, to_file='branch_model.png')
 pil_image.open('branch_model.png')
+
+plot_model(model, to_file='model.png')
+pil_image.open('model.png')
 
 # A Keras generator to evaluate on the HEAD MODEL on features already pre-computed.
 # It computes only the upper triangular matrix of the cost matrix if y is None.
@@ -718,7 +723,7 @@ def make_steps(step, ampl):
     histories.append(history)
     
 
-model_name = 'mpiotte-standard-lstm'
+model_name = 'mpiotte-standard-'
 histories  = []
 steps      = 0
 
@@ -842,7 +847,7 @@ if True:
     score   = score_reshape(score, fknown, fsubmit)
 
     # Generate the subsmission file.
-    prepare_submission(0.99, 'zl_mpiotte-standard_lstm.csv.gz')
+    prepare_submission(0.99, 'zl_mpiotte-standard_.csv.gz')
     
 
     
