@@ -652,7 +652,7 @@ def make_steps(step, ampl):
     history['epochs'] = steps
  #s   history['ms'    ] = np.mean(score)
     history['lr'    ] = get_lr(model)
-    print(history['epochs'],history['lr'],history['ms'])
+    print(history['epochs'],history['lr'])
     histories.append(history)
     
 
