@@ -295,10 +295,12 @@ random.shuffle(train)
 train_set = set(train)
 
 w2ts = {} # Associate the image ids from train to each whale id.
+#这里在match 列表中用到，去掉new_whale
 for w,hs in w2hs.items():
+    if w == new_whale:continue
     for h in hs:
         if h in train_set:
-            if w not in w2ts and w != new_whale: w2ts[w] = []
+            if w not in w2ts: w2ts[w] = []
             if h not in w2ts[w]: w2ts[w].append(h)
 for w,ts in w2ts.items(): w2ts[w] = np.array(ts)
     
@@ -601,9 +603,10 @@ def make_steps(step, ampl):
     # Map whale id to the list of associated training picture hash value
     w2ts = {}
     for w,hs in w2hs.items():
+        if w == new_whale:continue
         for h in hs:
             if h in train_set:
-                if w not in w2ts and w != new_whale: w2ts[w] = []
+                if w not in w2ts: w2ts[w] = []
                 if h not in w2ts[w]: w2ts[w].append(h)
     for w,ts in w2ts.items(): w2ts[w] = np.array(ts)
 
