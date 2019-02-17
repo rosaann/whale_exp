@@ -650,7 +650,7 @@ def make_steps(step, ampl):
     
     # Collect history data
     history['epochs'] = steps
-    history['ms'    ] = np.mean(score)
+ #s   history['ms'    ] = np.mean(score)
     history['lr'    ] = get_lr(model)
     print(history['epochs'],history['lr'],history['ms'])
     histories.append(history)
@@ -665,6 +665,8 @@ if False:
     model.set_weights(tmp.get_weights())
 else:
     # epoch -> 10
+    make_steps(1, 1000)
+
     make_steps(10, 1000)
     ampl = 100.0
     for _ in range(10):
