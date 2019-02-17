@@ -389,7 +389,7 @@ class TrainingData(Sequence):
         
        # print(i_list)
         selected_list = []
-        while len(self.match) != len(self.unmatch):
+        while len(self.match) > len(self.unmatch):
           i_list = list(range(len(train)))
           random.shuffle(i_list)
           for i in tqdm(range(match_len)):
@@ -426,7 +426,8 @@ class TrainingData(Sequence):
                     
             if m1 != 0 and m2 != 0:
                 self.unmatch.append((m1, m2))
-                        
+            if len(self.match) == len(self.unmatch):
+                break
             if len(i_list) == 0:
                 i_list = list(range(len(train)))
                 random.shuffle(i_list)
