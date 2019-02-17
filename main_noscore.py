@@ -386,11 +386,13 @@ class TrainingData(Sequence):
         
         match_len = len(self.match)
     #    print('len ', len(train))
-        i_list = list(range(len(train)))
-        random.shuffle(i_list)
+        
        # print(i_list)
         selected_list = []
-        for i in tqdm(range(match_len)):
+        while len(self.match) != len(self.unmatch):
+          i_list = list(range(len(train)))
+          random.shuffle(i_list)
+          for i in tqdm(range(match_len)):
             m1 = 0
             m2 = 0
             
@@ -446,7 +448,7 @@ class TrainingData(Sequence):
         random.shuffle(self.match)
         random.shuffle(self.unmatch)
         
-        print(len(self.match), len(train), len(self.unmatch), len(train))
+        print(len(self.match), len(train), len(self.unmatch))
      #   assert len(self.match) == len(train) and len(self.unmatch) == len(train)
     def __len__(self):
         return (len(self.match) + len(self.unmatch) + self.batch_size - 1)//self.batch_size
