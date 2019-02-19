@@ -666,6 +666,8 @@ if False:
 else:
     # epoch -> 10
     make_steps(1, 1000)
+    model.save(model_name)#test
+    '''
 
     make_steps(10, 1000)
     ampl = 100.0
@@ -699,7 +701,7 @@ else:
     set_lr(model, 1e-5)
     for _ in range(2): make_steps(5, 0.25)
     model.save(model_name)
-    
+    '''
     
 branch_model.save('mpiotte-standard_branch.model')
 head_model.save('mpiotte-standard_header.model')   
