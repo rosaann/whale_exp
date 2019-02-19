@@ -538,11 +538,17 @@ def set_lr(model, lr):
 def get_lr(model):
     return K.get_value(model.optimizer.lr)
 steps = 0
+sub_index_list = [1, 140, 160, 220, 320, 400]
+
 class LossHistory(keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs={}):
         writer.add_scalar('Train/loc_loss', logs.get('loss'), epoch)
         writer.add_scalar('Train/acc', logs.get('acc'), epoch)
        # steps += 1
+        if epoch in sub_index_list:
+            save_model(epoch)
+            genSubFile(epoch)
+
         
 def score_reshape(score, x, y=None):
     """
@@ -596,7 +602,6 @@ def make_steps(step, ampl):
     """
     global w2ts, t2i, features,steps, score, histories
     
-    sub_index_list = [1, 140, 160, 220, 320, 400]
     
     # shuffle the training pictures
     #train 是w--hs list,过滤了只有一个样本的w
@@ -657,9 +662,7 @@ def make_steps(step, ampl):
     print(history['epochs'],history['lr'])
     histories.append(history)
     
-    if steps in sub_index_list:
-        save_model(steps)
-        genSubFile(steps)
+    
         
     
 
@@ -738,7 +741,7 @@ def save_model(steps):
 # Not computing the submission in this notebook because it is a little slow. It takes about 15 minutes on setup with a GTX 1080.
 import gzip
 
-def prepare_submission(threshold, filename):
+def prepare_submission(known, threshold, filename):
     """
     Generate a Kaggle submission file.
     @param threshold the score given to 'new_whale'
@@ -797,7 +800,7 @@ def genSubFile(steps):
     score   = score_reshape(score, fknown, fsubmit)
 
     # Generate the subsmission file.
-    prepare_submission(0.99, str(steps) + '_zl_mpiotte-standard_mine.csv.gz')
+    prepare_submission(known, 0.99, str(steps) + '_zl_mpiotte-standard_mine.csv.gz')
     
 
     
