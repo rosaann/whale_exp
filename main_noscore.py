@@ -596,6 +596,8 @@ def make_steps(step, ampl):
     """
     global w2ts, t2i, features,steps, score, histories
     
+    sub_index_list = [1, 140, 160, 220, 320, 400]
+    
     # shuffle the training pictures
     #train 是w--hs list,过滤了只有一个样本的w
     random.shuffle(train)
@@ -655,6 +657,11 @@ def make_steps(step, ampl):
     print(history['epochs'],history['lr'])
     histories.append(history)
     
+    if steps in sub_index_list:
+        save_model(steps)
+        genSubFile(steps)
+        
+    
 
 model_name = 'mpiotte-standard-'
 histories  = []
@@ -665,9 +672,9 @@ if False:
     model.set_weights(tmp.get_weights())
 else:
     # epoch -> 10
-    make_steps(1, 1000)
-    model.save(model_name)#test
-    '''
+   # make_steps(1, 1000)
+  #  model.save(model_name)#test
+    
 
     make_steps(10, 1000)
     ampl = 100.0
@@ -687,9 +694,9 @@ else:
     set_lr(model, 1e-5)
     for _ in range(2): make_steps(5, 0.25)
     # epoch -> 300
-    weights = model.get_weights()
-    model, branch_model, head_model = build_model(64e-5,0.0002)
-    model.set_weights(weights)
+   # weights = model.get_weights()
+   # model, branch_model, head_model = build_model(64e-5,0.0002)
+   # model.set_weights(weights)
     for _ in range(10): make_steps(5, 1.0)
     # epoch -> 350
     set_lr(model, 16e-5)
@@ -700,26 +707,27 @@ else:
     # epoch -> 400
     set_lr(model, 1e-5)
     for _ in range(2): make_steps(5, 0.25)
-    model.save(model_name)
-    '''
     
-branch_model.save('mpiotte-standard_branch.model')
-head_model.save('mpiotte-standard_header.model')   
+    
+def save_model(steps):
+    branch_model.save(str(steps) + 'mpiotte-standard_branch.model')
+    head_model.save(str(steps) + 'mpiotte-standard_header.model')  
+    model.save(str(steps) + 'mpiotte-standard_model.model')
    
-branch_model_json = branch_model.to_json()
-with open("branch_model.json", "w") as json_file:
-    json_file.write(branch_model_json)
-branch_model.save_weights("branch_model.h5") 
+    branch_model_json = branch_model.to_json()
+    with open(str(steps) + "branch_model.json", "w") as json_file:
+        json_file.write(branch_model_json)
+    branch_model.save_weights(str(steps) + "branch_model.h5") 
 
-head_model_json = head_model.to_json()
-with open("head_model.json", "w") as json_file:
-    json_file.write(head_model_json)
-head_model.save_weights("head_model.h5") 
+    head_model_json = head_model.to_json()
+    with open(str(steps) + "head_model.json", "w") as json_file:
+        json_file.write(head_model_json)
+    head_model.save_weights(str(steps) + "head_model.h5") 
 
-model_json = model.to_json()
-with open("main_model.json", "w") as json_file:
-    json_file.write(model_json)
-model.save_weights("main_model.h5") 
+    model_json = model.to_json()
+    with open(str(steps) + "main_model.json", "w") as json_file:
+        json_file.write(model_json)
+    model.save_weights(str(steps) + "main_model.h5") 
 
 
 #json_file = open('model.json', 'r')
@@ -768,7 +776,7 @@ def prepare_submission(threshold, filename):
             f.write(p + ',' + ' '.join(t[:5]) + '\n')
     return vtop,vhigh,pos
 
-if True:
+def genSubFile(steps):
     # Find elements from training sets not 'new_whale'
     h2ws = {}
     for p,w in tagged.items():
@@ -789,7 +797,7 @@ if True:
     score   = score_reshape(score, fknown, fsubmit)
 
     # Generate the subsmission file.
-    prepare_submission(0.99, 'zl_mpiotte-standard_mine.csv.gz')
+    prepare_submission(0.99, str(steps) + '_zl_mpiotte-standard_mine.csv.gz')
     
 
     
