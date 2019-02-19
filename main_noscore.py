@@ -566,7 +566,7 @@ def save_model(steps):
 # Not computing the submission in this notebook because it is a little slow. It takes about 15 minutes on setup with a GTX 1080.
 import gzip
 
-def prepare_submission(known, threshold, filename):
+def prepare_submission(known,score, threshold, filename):
     """
     Generate a Kaggle submission file.
     @param threshold the score given to 'new_whale'
@@ -625,7 +625,7 @@ def genSubFile(steps):
     score   = score_reshape(score, fknown, fsubmit)
 
     # Generate the subsmission file.
-    prepare_submission(known, 0.99, str(steps) + '_zl_mpiotte-standard_mine.csv.gz')
+    prepare_submission(known,score, 0.99, str(steps) + '_zl_mpiotte-standard_mine.csv.gz')
     
 
 steps = 0
