@@ -628,8 +628,7 @@ def genSubFile(steps):
     prepare_submission(known,score, 0.99, str(steps) + '_zl_mpiotte-standard_mine.csv.gz')
     
 
-steps = 0
-sub_index_list = [0, 140, 160, 220, 320, 400]
+sub_index_list = [323,350, 360, 370, 380, 390, 400, 410,420,430,440,450]
 
 class LossHistory(keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs={}):
@@ -685,14 +684,15 @@ def to_grayscale(img):
     # print(image.shape)
     # assert False
     return img
-def make_steps(step, ampl):
+def make_steps(steps, step, ampl):
     """
     Perform training epochs
     @param step Number of epochs to perform
     @param ampl the K, the randomized component of the score matrix.
     """
-    global w2ts, t2i, features,steps, score, histories
     
+    global w2ts, t2i, features, score, histories
+
     
     # shuffle the training pictures
     #train 是w--hs list,过滤了只有一个样本的w
@@ -761,9 +761,42 @@ model_name = 'mpiotte-standard-'
 histories  = []
 #steps      = 0
 
-if False:
-    tmp = keras.models.load_model('mpiotte-standard.model')
-    model.set_weights(tmp.get_weights())
+if True:
+   # tmp = keras.models.load_model('mpiotte-standard.model')
+    model.load_weights('320main_model.h5')
+    branch_model.load_weights('320branch_model.h5')
+    head_model.load_weights('320head_model.h5')
+    
+    set_lr(model, 1e-5)
+    steps = 320
+    for _ in range(2): 
+        steps = make_steps(steps, 5, 0.25)
+    # epoch -> 300
+   # weights = model.get_weights()
+   # model, branch_model, head_model = build_model(64e-5,0.0002)
+   # model.set_weights(weights)
+    for _ in range(10): steps = make_steps(steps,5, 1.0)
+    # epoch -> 350
+    set_lr(model, 16e-5)
+    for _ in range(10): steps = make_steps(steps,5, 0.5)    
+    # epoch -> 390
+    set_lr(model, 4e-5)
+    for _ in range(8): steps = make_steps(steps,5, 0.25)
+    # epoch -> 400
+    set_lr(model, 1e-5)
+    for _ in range(8): steps = make_steps(steps,5, 0.25)
+    
+    set_lr(model, 9e-6)
+    for _ in range(8): steps = make_steps(steps,5, 0.25)
+    
+    set_lr(model, 6e-6)
+    for _ in range(8): steps = make_steps(steps,5, 0.25)
+    
+    set_lr(model, 3e-6)
+    for _ in range(8): steps = make_steps(steps,5, 0.25)
+    
+    set_lr(model, 1e-6)
+    for _ in range(8): steps = make_steps(steps,5, 0.25)
 else:
     # epoch -> 10
    # make_steps(1, 1000)
