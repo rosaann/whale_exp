@@ -753,6 +753,7 @@ def make_steps(steps, step, ampl):
     print(history['epochs'],history['lr'])
     histories.append(history)
     
+    return steps
     
         
     
@@ -769,6 +770,7 @@ if True:
     
     set_lr(model, 1e-5)
     steps = 320
+    steps = make_steps(steps, 1, 0.25)
     for _ in range(2): 
         steps = make_steps(steps, 5, 0.25)
     # epoch -> 300
